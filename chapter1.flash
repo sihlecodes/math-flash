@@ -4,11 +4,11 @@ heading: Complex Analysis
 term: Properties of a <b>power series</b>
 description: |
   A power series $\sum_{n=0}^\infty c_n(z-a)^n$ satisfies exactly one of the following:
-  <ol class="roman">
-    <li>the series converges $\forall z\in \C$</li>
-    <li>the series converges only for $z=a$</li>
-    <li>there exists a positive $R\in\R$ such that the series converges $\forall z\in \C:|z-a|\lt R$ and diverges $\forall z\in\C : |z-a|\gt R$</li>
-  </ol>
+list:
+  - the series converges $\forall z\in \C$
+  - the series converges only for $z=a$
+  - |
+    there exists a positive $R\in\R$ such that the series converges $\forall z\in \C:|z-a|\lt R$ and diverges $\forall z\in\C : |z-a|\gt R$
 
 name: Theorem 4.3
 page: 45

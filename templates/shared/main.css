@@ -11,7 +11,7 @@ body {
 .container {
    display: grid;
    width: 99%;
-   height: 1100px;
+   height: calc(294mm - 5mm * 2);
    page-break-after: always;
    grid-template-columns: repeat(var(--columns), 1fr);
    grid-template-rows: repeat(var(--rows), 1fr);
@@ -29,10 +29,15 @@ body {
    padding: var(--vertical-padding) var(--horizontal-padding);
    align-items: center;
    justify-content: center;
+   direction: ltr;
 }
 
 .back .card {
    border: 1px dashed var(--border-color);
+}
+
+.container.back {
+   direction: rtl;
 }
 
 .card .content {

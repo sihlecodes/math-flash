@@ -33,7 +33,12 @@ async function parseFlashCardsFile(file, rows, template) {
    let data = YAML.loadAll(file);
    const heading = data.shift();
 
-   data = data.map(function(e) { return { ...e, ...heading }});
+   data = data.map(function(e) { return {
+      list: [], listStyle: "roman",
+      footer: "", page: 0,
+      ...e, ...heading
+   }});
+
    let pages = chunkArray(data, rows);
 
    return await ejs.renderFile(template, { title: 'Flash Cards', pages });
@@ -57,10 +62,10 @@ parseFlashCardsFile(file, rows, template)
       path: outputPDFPath,
       format: 'A4',
       margin: {
-         left: 10,
-         right: 10,
-         top: 10,
-         bottom: 10,
+         left: '5mm',
+         right: '5mm',
+         top: '5mm',
+         bottom: '5mm',
       }
    });
    await browser.close();
