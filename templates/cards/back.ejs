@@ -1,8 +1,8 @@
 <div class="card back">
    <div class="content">
       <%- description _%>
-      <%_ if (list) { %>
-      <ol style="<% listStyle %>">
+      <%_ if (list.length > 0) { %>
+      <ol style="<%= listStyle %>">
          <% list.forEach(function(item) { %>
             <li><%- item _%></li>
          <% }) %>

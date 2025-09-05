@@ -16,7 +16,7 @@ page: 45
 ---
 term: Complexity <b>differentiability</b> at a <b>single</b> point c.
 description: |
-  Let $D=N(c,R)$ be an open disc in $\mathbb{C}$. Let $f$ be a complex function whose domain contains $D$, let $f(x+iy)=\\u(x,y)+iv(x,y)$, and supppose that the partial derivatives $$\frac{\partial u}{\partial x},\frac{\partial v}{\partial x},\frac{\partial u}{\partial y},\frac{\partial v}{\partial y}$$ exist and are continuous throught $D$. Suppose also that the Cauchy Rieman equations are satisfied at $c$. Then $f$ is differentiable at $c$.
+  Let $D=N(c,R)$ be an open disc in $\mathbb{C}$. Let $f$ be a complex function whose domain contains $D$, let $\\f(x+iy)=u(x,y)+iv(x,y)$, and supppose that the partial derivatives $$\frac{\partial u}{\partial x},\frac{\partial v}{\partial x},\frac{\partial u}{\partial y},\frac{\partial v}{\partial y}$$ exist and are continuous throught $D$. Suppose also that the Cauchy Rieman equations are satisfied at $c$. Then $f$ is differentiable at $c$.
 
 name: Theorem 4.3
 page: 0
