@@ -31,9 +31,18 @@
     }
 
     body {
-      --border-color: rgba(0, 0, 0, 5%);
+      --border-color: rgba(0, 0, 0, 8%);
       --columns: 2;
       --rows: 4;
+    }
+
+    th, td {
+      border: 1px dashed var(--border-color);
+    }
+
+    table {
+      page-break-inside: avoid;
+      border-collapse: collapse;
     }
 
     table.outer {
@@ -42,7 +51,7 @@
       font-family: sans-serif;
       line-height: 1.6;
       font-size: 9pt;
-      border: 1px solid var(--border-color);
+      table-layout: fixed;
       page-break-after: always;
     }
 
@@ -50,12 +59,6 @@
       height: calc(100% / var(--rows));
       padding: 20px 30px;
       width: calc(100% / var(--columns));
-      border: 0;
-    }
-
-    table.outer :is(th, td):not(:last-child) {
-      border-bottom: 1px solid var(--border-color);
-      border-right: 1px solid var(--border-color);
     }
 
     table.inner {
@@ -81,6 +84,11 @@
       vertical-align: bottom;
     }
 
+    td.page {
+      text-align: left;
+      vertical-align: bottom;
+    }
+
     td.term {
       text-align: center;
     }
@@ -100,12 +108,13 @@
       <td>
           <table class="inner">
             <tr>
-              <th class="module">Complex Analysis</th>
+              <th colspan="2" class="module">Complex Analysis</th>
             </tr>
             <tr>
-              <td class="term">Complex differentiability at a single point c.</td>
+              <td colspan="2" class="term">Complex <b>differentiability</b> at a <b>single</b> point c.</td>
             </tr>
             <tr>
+              <td class="page">Page 45</td>
               <td class="type">Theorem 4.3</td>
             </tr>
           </table>
