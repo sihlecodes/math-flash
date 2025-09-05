@@ -11,10 +11,11 @@
   "type": "commonjs",
   "description": "",
   "dependencies": {
+    "ejs": "^3.1.10",
     "express": "^5.1.0",
     "fauxdom": "^1.2.2",
-    "puppeteer": "^24.19.0",
-    "yaml": "^2.8.1"
+    "js-yaml": "^4.1.0",
+    "puppeteer": "^24.19.0"
   },
   "devDependencies": {
     "connect-livereload": "^0.6.1",
