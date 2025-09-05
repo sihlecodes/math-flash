@@ -1,22 +1,20 @@
-module: Complex Analysis
+heading: Complex Analysis
 
 ---
 term: Hello 
 description: >
   This is a test to see how this entire thing is done.
 label: Theorem 4.3
----
+page: 45
 
 ---
 term: Hello 
 description: >
   This is a test to see how this entire thing is done.
 label: Theorem 4.4
----
 
 ---
 term: Hello 
 description: >
   This is a test to see how this entire thing is done.
 label: Theorem 4.5
----
