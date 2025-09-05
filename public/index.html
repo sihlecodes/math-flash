@@ -4,142 +4,54 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LaTeX in HTML</title>
+
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/main.css">
+
   <script defer src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-    renderMathInElement(document.body, {
-      delimiters: [
-        {left: "$$", right: "$$", display: true},
-        {left: "\\[", right: "\\]", display: true},
-        {left: "$", right: "$", display: false}
-      ],
-      macros: {
-        "\\R": "\\mathbb{R}",
-        "\\C": "\\mathbb{C}",
-        "\\e": "\\exist",
-        "\\fa": "\\forall",
-      } 
-    }); 
-  });
-  </script>
+  <script defer src="js/main.js"></script>
 
-  <style>
-    * {
-      margin: 0;
-    }
-
-    body {
-      --border-color: rgba(0, 0, 0, 8%);
-      --columns: 2;
-      --rows: 4;
-    }
-
-    th, td {
-      border: 1px dashed var(--border-color);
-    }
-
-    table {
-      page-break-inside: avoid;
-      border-collapse: collapse;
-    }
-
-    table.outer {
-      width: 100%;
-      height: 1105px;
-      font-family: sans-serif;
-      line-height: 1.6;
-      font-size: 9pt;
-      table-layout: fixed;
-      page-break-after: always;
-    }
-
-    table.outer :is(th, td) {
-      height: calc(100% / var(--rows));
-      padding: 20px 30px;
-      width: calc(100% / var(--columns));
-    }
-
-    table.inner {
-      width: 100%;
-      height: 100%;
-    }
-
-    table.inner tr * {
-      border: none;
-      padding: 0;
-    }
-    
-    td.description {
-      /* text-align: justify; */
-    }
-
-    th.module {
-      vertical-align: top;
-    }
-
-    td.type {
-      text-align: right;
-      vertical-align: bottom;
-    }
-
-    td.page {
-      text-align: left;
-      vertical-align: bottom;
-    }
-
-    td.term {
-      text-align: center;
-    }
-
-    table {
-      border-spacing: 0;
-    }
-
-    ol.roman {
-      list-style: lower-roman;
-    }
-  </style>
 </head>
 <body>
   <table class="outer">
     <tr>
       <td>
-          <table class="inner">
-            <tr>
-              <th colspan="2" class="module">Complex Analysis</th>
-            </tr>
-            <tr>
-              <td colspan="2" class="term">Complex <b>differentiability</b> at a <b>single</b> point c.</td>
-            </tr>
-            <tr>
-              <td class="page">Page 45</td>
-              <td class="type">Theorem 4.3</td>
-            </tr>
-          </table>
+        <table class="inner">
+          <tr>
+            <th colspan="2" class="module">Complex Analysis</th>
+          </tr>
+          <tr>
+            <td colspan="2" class="term">Complex <b>differentiability</b> at a <b>single</b> point c.</td>
+          </tr>
+          <tr>
+            <td class="page">Page 45</td>
+            <td class="type">Theorem 4.3</td>
+          </tr>
+        </table>
       </td>
       <td class="description">
-          Here is an <b>inline equation</b>: $E = mc^2$.
-          Here is a block equation: The other thing that we used to do was the other theorem that we used in the previous proof. So now we are going to prove the following theorem that was using the ways of the world. \[\int_a^b f(x) \, dx = F(b) - F(a)\]
+        Here is an <b>inline equation</b>: $E = mc^2$.
+        Here is a block equation: The other thing that we used to do was the other theorem that we used in the previous proof. So now we are going to prove the following theorem that was using the ways of the world. \[\int_a^b f(x) \, dx = F(b) - F(a)\]
       </td>
     </tr>
     <tr>
       <td class="description">
-          A power series $\sum_{n=0}^\infty c_n(z-a)^n$ satisfies exactly one of the following:
-          <ol class="roman">
-            <li>the series converges $\forall z\in \C$</li>
-            <li>the series converges only for $z=a$</li>
-            <li>there exists a positive $R\in\R$ such that the series converges $\forall z\in \C:|z-a|\lt R$ and diverges $\forall z\in\C : |z-a|\gt R$</li>
-          </ol>
+        A power series $\sum_{n=0}^\infty c_n(z-a)^n$ satisfies exactly one of the following:
+        <ol class="roman">
+          <li>the series converges $\forall z\in \C$</li>
+          <li>the series converges only for $z=a$</li>
+          <li>there exists a positive $R\in\R$ such that the series converges $\forall z\in \C:|z-a|\lt R$ and diverges $\forall z\in\C : |z-a|\gt R$</li>
+        </ol>
       </td>
       <td class="description">
-          Let $S$ be a closed, bounded set, and $f$, with domain containing $\delta$, be continuous. Then $f$ is bounded on $S$; that is $\{|f(z)|:z\in S\}$ is bounded. Moreover if $M=\sup_\delta|f|$, then $\exist z\in S$ such that $|f(z)|=M$.
+        Let $S$ be a closed, bounded set, and $f$, with domain containing $\delta$, be continuous. Then $f$ is bounded on $S$; that is $\{|f(z)|:z\in S\}$ is bounded. Moreover if $M=\sup_\delta|f|$, then $\exist z\in S$ such that $|f(z)|=M$.
       </td>
     </tr>
     <tr>
       <td>
-          Let $D=N(c,R)$ be an open disc in $\mathbb{C}$. Let $f$ be a complex function whose domain contains $D$, let $\\f(x+iy)=u(x,y)+iv(x,y)$, and supppose that the partial derivatives $$\frac{\partial u}{\partial x},\frac{\partial v}{\partial x},\frac{\partial u}{\partial y},\frac{\partial v}{\partial y}$$ exist and are continuous throught $D$. Suppose also that the Cauchy Rieman equations are satisfied at $c$. Then $f$ is differentiable at $c$.
+        Let $D=N(c,R)$ be an open disc in $\mathbb{C}$. Let $f$ be a complex function whose domain contains $D$, let $\\f(x+iy)=u(x,y)+iv(x,y)$, and supppose that the partial derivatives $$\frac{\partial u}{\partial x},\frac{\partial v}{\partial x},\frac{\partial u}{\partial y},\frac{\partial v}{\partial y}$$ exist and are continuous throught $D$. Suppose also that the Cauchy Rieman equations are satisfied at $c$. Then $f$ is differentiable at $c$.
       </td>
       <td>
       </td>
@@ -150,42 +62,42 @@
       </td>
     </tr>
   </table>
-    <table class="outer">
+  <table class="outer">
     <tr>
       <td>
-          <table class="inner">
-            <tr>
-              <th class="module">Complex Analysis</th>
-            </tr>
-            <tr>
-              <td class="term">Complex differentiability at a single point c.</td>
-            </tr>
-            <tr>
-              <td class="type">Theorem 4.3</td>
-            </tr>
-          </table>
+        <table class="inner">
+          <tr>
+            <th class="module">Complex Analysis</th>
+          </tr>
+          <tr>
+            <td class="term">Complex differentiability at a single point c.</td>
+          </tr>
+          <tr>
+            <td class="type">Theorem 4.3</td>
+          </tr>
+        </table>
       </td>
       <td class="description">
-          Here is an <b>inline equation</b>: $E = mc^2$.
-          Here is a block equation: The other thing that we used to do was the other theorem that we used in the previous proof. So now we are going to prove the following theorem that was using the ways of the world. \[\int_a^b f(x) \, dx = F(b) - F(a)\]
+        Here is an <b>inline equation</b>: $E = mc^2$.
+        Here is a block equation: The other thing that we used to do was the other theorem that we used in the previous proof. So now we are going to prove the following theorem that was using the ways of the world. \[\int_a^b f(x) \, dx = F(b) - F(a)\]
       </td>
     </tr>
     <tr>
       <td class="description">
-          A power series $\sum_{n=0}^\infty c_n(z-a)^n$ satisfies exactly one of the following:
-          <ol class="roman">
-            <li>the series converges $\forall z\in \C$</li>
-            <li>the series converges only for $z=a$</li>
-            <li>there exists a positive $R\in\R$ such that the series converges $\forall z\in \C:|z-a|\lt R$ and diverges $\forall z\in\C : |z-a|\gt R$</li>
-          </ol>
+        A power series $\sum_{n=0}^\infty c_n(z-a)^n$ satisfies exactly one of the following:
+        <ol class="roman">
+          <li>the series converges $\forall z\in \C$</li>
+          <li>the series converges only for $z=a$</li>
+          <li>there exists a positive $R\in\R$ such that the series converges $\forall z\in \C:|z-a|\lt R$ and diverges $\forall z\in\C : |z-a|\gt R$</li>
+        </ol>
       </td>
       <td class="description">
-          Let $S$ be a closed, bounded set, and $f$, with domain containing $\delta$, be continuous. Then $f$ is bounded on $S$; that is $\{|f(z)|:z\in S\}$ is bounded. Moreover if $M=\sup_\delta|f|$, then $\exist z\in S$ such that $|f(z)|=M$.
+        Let $S$ be a closed, bounded set, and $f$, with domain containing $\delta$, be continuous. Then $f$ is bounded on $S$; that is $\{|f(z)|:z\in S\}$ is bounded. Moreover if $M=\sup_\delta|f|$, then $\exist z\in S$ such that $|f(z)|=M$.
       </td>
     </tr>
     <tr>
       <td>
-          Let $D=N(c,R)$ be an open disc in $\mathbb{C}$. Let $f$ be a complex function whose domain contains $D$, let $\\f(x+iy)=u(x,y)+iv(x,y)$, and supppose that the partial derivatives $$\frac{\partial u}{\partial x},\frac{\partial v}{\partial x},\frac{\partial u}{\partial y},\frac{\partial v}{\partial y}$$ exist and are continuous throught $D$. Suppose also that the Cauchy Rieman equations are satisfied at $c$. Then $f$ is differentiable at $c$.
+        Let $D=N(c,R)$ be an open disc in $\mathbb{C}$. Let $f$ be a complex function whose domain contains $D$, let $\\f(x+iy)=u(x,y)+iv(x,y)$, and supppose that the partial derivatives $$\frac{\partial u}{\partial x},\frac{\partial v}{\partial x},\frac{\partial u}{\partial y},\frac{\partial v}{\partial y}$$ exist and are continuous throught $D$. Suppose also that the Cauchy Rieman equations are satisfied at $c$. Then $f$ is differentiable at $c$.
       </td>
       <td>
       </td>
@@ -196,7 +108,5 @@
       </td>
     </tr>
   </table>
-
-
 </body>
 </html>
