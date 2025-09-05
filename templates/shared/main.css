@@ -1,0 +1,95 @@
+* {
+   margin: 0;
+}
+
+body {
+   font-family: sans-serif;
+   line-height: 1.6;
+   font-size: 9pt;
+}
+
+.container {
+   display: grid;
+   width: 99%;
+   height: 1100px;
+   page-break-after: always;
+   grid-template-columns: repeat(var(--columns), 1fr);
+   grid-template-rows: repeat(var(--rows), 1fr);
+   gap: 0;
+   margin: 0 auto;
+}
+
+.card {
+   --vertical-padding: 20px;
+   --horizontal-padding: 30px;
+
+   display: flex;
+   width: calc(100% - 2 * var(--horizontal-padding));
+   height: calc(100% - 2 * var(--vertical-padding));
+   padding: var(--vertical-padding) var(--horizontal-padding);
+   align-items: center;
+   justify-content: center;
+}
+
+.back .card {
+   border: 1px dashed var(--border-color);
+}
+
+.card .content {
+   width: 100%;
+   vertical-align: center;
+   align-items: center;
+   justify-content: center;
+}
+
+.card .content table {
+   width: 100%;
+   height: 100%;
+}
+
+.card .content table td {
+   width: 50%;
+}
+
+.front .card .content {
+   display: flex;
+   flex-direction: column;
+   height: 100%;
+}
+
+.column {
+   width: 100%;
+   display: flex;
+   flex-direction: row;
+}
+
+.column * {
+   flex-grow: 1;
+}
+
+.card .description {
+   /* text-align: justify; */
+}
+
+.card .heading {
+   text-align: center;
+   vertical-align: top;
+}
+
+.card .name {
+   text-align: right;
+   vertical-align: bottom;
+}
+
+.card .page-number {
+   text-align: left;
+   vertical-align: bottom;
+}
+
+.card .term {
+   text-align: center;
+}
+
+ol.roman {
+   list-style: lower-roman;
+}

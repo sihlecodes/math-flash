@@ -6,13 +6,13 @@ const app = express();
 
 // 🔁 Create LiveReload server
 const liveReloadServer = livereload.createServer();
-liveReloadServer.watch(__dirname + "/public");
+liveReloadServer.watch(__dirname + "/output");
 
 // 🔌 Inject LiveReload script into HTML
 app.use(connectLivereload());
 
 // 📁 Serve static files
-app.use(express.static("public"));
+app.use(express.static("output"));
 
 // 🔄 Refresh browser on changes
 liveReloadServer.server.once("connection", () => {

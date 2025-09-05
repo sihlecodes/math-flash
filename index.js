@@ -5,22 +5,21 @@ const ejs = require('ejs')
 
 const YAML = require('js-yaml');
 
-const rows = 4;
-const outputPath = path.join(__dirname, 'output.pdf');
-const resourcesPath = path.join(__dirname, 'public');
-const templatesPath = path.join(resourcesPath, 'templates');
+const rows = 8;
+const outputPath = path.join(__dirname, 'output');
+const outputHTMLPath = path.join(outputPath, 'index.html');
+const outputPDFPath = path.join(outputPath, 'output.pdf');
 
-const templates = {
-   main: path.join(templatesPath, 'main.ejs'),
-   card: {
-      front: path.join(templatesPath, 'card-front.ejs'),
-      back: path.join(templatesPath, 'card-back.ejs'),
-   },
-   container: {
-      front: path.join(templatesPath, 'container-front.ejs'),
-      back: path.join(templatesPath, 'container-back.ejs'),
-   }
-}
+const templatesPath = path.join(__dirname, 'templates');
+
+if (!fs.existsSync(outputPath))
+   fs.mkdirSync(path.join(outputPath, 'shared'),
+      { recursive: true });
+
+fs.cpSync(path.join(templatesPath, 'shared'),
+   path.join(outputPath, 'shared'), { recursive: true });
+
+const template = path.join(templatesPath, 'index.ejs');
 
 function chunkArray(arr, size) {
   const result = [];
@@ -30,35 +29,32 @@ function chunkArray(arr, size) {
   return result;
 }
 
-async function parseFlashCardsFile(file, rows, templates) {
+async function parseFlashCardsFile(file, rows, template) {
    let data = YAML.loadAll(file);
    const heading = data.shift();
 
-   data = data.map(function(e) { return { ...e, heading }});
+   data = data.map(function(e) { return { ...e, ...heading }});
    let pages = chunkArray(data, rows);
 
-   let document = await ejs.renderFile(templates.main, { title: 'Flash Cards', pages }, { escape: false });
-
-   return document;
+   return await ejs.renderFile(template, { title: 'Flash Cards', pages });
 }
 
 const file = fs.readFileSync('./chapter1.flash', 'utf8');
 
-parseFlashCardsFile(file, rows, templates)
+parseFlashCardsFile(file, rows, template)
    .then((document) => {
       console.log(document);
-      fs.writeFileSync(path.join(resourcesPath, 'test.html'), document);
+      fs.writeFileSync(outputHTMLPath, document);
    });
 
 (async () => {
    const browser = await puppeteer.launch();
    const page = await browser.newPage();
 
-   const index = path.join(resourcesPath, 'test.html')
-   await page.goto(`file:${index}`, { waitUntil: 'networkidle0', });
+   await page.goto(`file:${outputHTMLPath}`, { waitUntil: 'networkidle0', });
 
    await page.pdf({
-      path: outputPath,
+      path: outputPDFPath,
       format: 'A4',
       margin: {
          left: 10,

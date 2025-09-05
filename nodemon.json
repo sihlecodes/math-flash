@@ -1,4 +1,4 @@
 {
-  "watch": ["./index.js", "public/"],
-  "ext": "js,html,flash"
+  "watch": ["./index.js", "templates/"],
+  "ext": "css,js,html,flash,ejs"
 }
