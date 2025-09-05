@@ -27,6 +27,7 @@ parser.add_argument('flash_file', { metavar: 'FLASH_FILE', help: 'YAML file cont
 
 const args = parser.parse_args();
 
+args.margins = flashCards.parseMargins(args.margins);
 args.output_directory = path.resolve(args.output_directory);
 
 args.output_name = path.parse((args.output_name === '')

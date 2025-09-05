@@ -16,7 +16,7 @@ function _partitionArray(array, size) {
   return result;
 }
 
-function _parseMargins(margins) {
+function parseMargins(margins) {
    margins = margins.split(',').map(e => e.trim());
 
    let right, left, bottom, top;
@@ -54,7 +54,7 @@ async function _parseFlashCardsFile(flashCardsContent, partitionSize, template) 
    return await ejs.renderFile(template, { pages });
 }
 
-function exportToHTML(sourceFlashPath, outputHTMLPath, options) {
+async function exportToHTML(sourceFlashPath, outputHTMLPath, options) {
    const outputDirectory = path.dirname(outputHTMLPath);
 
    if (!fs.existsSync(outputDirectory))
@@ -64,8 +64,11 @@ function exportToHTML(sourceFlashPath, outputHTMLPath, options) {
    fs.cpSync(path.join(DEFAULT_TEMPLATES_PATH, 'shared'),
       path.join(outputDirectory, 'shared'), { recursive: true });
 
+   let contents = await ejs.renderFile(path.join(DEFAULT_TEMPLATES_PATH, 'shared', 'variables.css'), options);
+   fs.writeFileSync(path.join(outputDirectory, 'shared', 'variables.css'), contents);
+
    const partitionSize = options.columns * options.rows;
-   const contents = fs.readFileSync(sourceFlashPath, 'utf8');
+   contents = fs.readFileSync(sourceFlashPath, 'utf8');
 
    _parseFlashCardsFile(contents, partitionSize, TEMPLATE)
    .then((document) => {
@@ -84,7 +87,7 @@ async function exportToPDF(sourceHTMLPath, outputPDFPath, options) {
    await page.pdf({
       path: outputPDFPath,
       format: options.format,
-      margin: _parseMargins(options.margins),
+      margin: options.margins,
    });
 
    await browser.close();
@@ -93,5 +96,6 @@ async function exportToPDF(sourceHTMLPath, outputPDFPath, options) {
 module.exports = {
    exportToPDF,
    exportToHTML,
+   parseMargins,
    DEFAULT_TEMPLATES_PATH
 }

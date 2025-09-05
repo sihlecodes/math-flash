@@ -1,6 +1,7 @@
 :root {
-  --border-color: rgba(0, 0, 0, 8%);
-  --columns: 2;
-  --rows: 4;
-  --padding: 30px;
+  --columns: <%= columns _%>;
+  --rows: <%= rows _%>;
+  <%_ for (const margin of Object.keys(margins)) { _%>
+  --margin-<%= margin %>: <%= margins[margin] _%>;
+  <%_ } _%>
 }
