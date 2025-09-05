@@ -1,9 +1,18 @@
 heading: Complex Analysis
 
 ---
-term: Hello 
-description: >
-  This is a test to see how this entire thing is done.
+term: Properties of a power series
+description: |
+  A power series $\sum_{n=0}^\infty c_n(z-a)^n$ satisfies exactly one of the following:
+  <ol class="roman">
+    <li>the series converges $\forall z\in \C$</li>
+    <li>the series converges only for $z=a$</li>
+    <li>there exists a positive $R\in\R$ such that the series converges $\forall z\in \C:|z-a|\lt R$ and diverges $\forall z\in\C : |z-a|\gt R$</li>
+  </ol>
+
+
+
+
 label: Theorem 4.3
 page: 45
 
@@ -12,9 +21,11 @@ term: Hello
 description: >
   This is a test to see how this entire thing is done.
 label: Theorem 4.4
+page: 45
 
 ---
 term: Hello 
 description: >
   This is a test to see how this entire thing is done.
 label: Theorem 4.5
+page: 68

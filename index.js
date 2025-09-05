@@ -1,67 +1,72 @@
 const puppeteer = require('puppeteer');
 const path = require('path');
 const fs = require('fs');
+const ejs = require('ejs')
 
 const YAML = require('js-yaml');
-const DOM = require('fauxdom');
 
-const document = new DOM('<!DOCTYPE html><head><style>td { border: 1px solid black; }</style></head><body></body>');
-const body = document.getElementsByTagName('body')[0];
+const rows = 4;
+const outputPath = path.join(__dirname, 'output.pdf');
+const resourcesPath = path.join(__dirname, 'public');
+const templatesPath = path.join(resourcesPath, 'templates');
 
-const columns = 2, rows = 4;
-
-const flashCardFronts = document.createElement('table');
-
-const file = fs.readFileSync('./chapter1.flash', 'utf8');
-const data = YAML.loadAll(file);
-
-const meta = data.shift();
-const heading = meta.shift().heading;
-
-console.log(heading);
-
-let row = document.createElement('tr');
-
-for (let i = 0; i < data.length; i++) {
-  const meta = data[i]; // YAML document
-
-  if (i % 2 == 0 && i > 0) {
-    console.log(row.outerHTML, '\n');
-    flashCardFronts.appendChild(row);
-    row = document.createElement('tr');
-  }
-
-  const description = document.createElement('td');
-  description.className = 'description';
-  description.textContent = meta.description;
-
-  row.appendChild(description);
+const templates = {
+   main: path.join(templatesPath, 'main.ejs'),
+   card: {
+      front: path.join(templatesPath, 'card-front.ejs'),
+      back: path.join(templatesPath, 'card-back.ejs'),
+   },
+   container: {
+      front: path.join(templatesPath, 'container-front.ejs'),
+      back: path.join(templatesPath, 'container-back.ejs'),
+   }
 }
 
-flashCardFronts.appendChild(row);
-body.appendChild(flashCardFronts);
+function chunkArray(arr, size) {
+  const result = [];
+  for (let i = 0; i < arr.length; i += size) {
+    result.push(arr.slice(i, i + size));
+  }
+  return result;
+}
 
-console.log(document.innerHTML);
+async function parseFlashCardsFile(file, rows, templates) {
+   let data = YAML.loadAll(file);
+   const heading = data.shift();
 
-fs.writeFileSync('test.html', document.innerHTML);
+   data = data.map(function(e) { return { ...e, heading }});
+   let pages = chunkArray(data, rows);
+
+   let document = await ejs.renderFile(templates.main, { title: 'Flash Cards', pages }, { escape: false });
+
+   return document;
+}
+
+const file = fs.readFileSync('./chapter1.flash', 'utf8');
+
+parseFlashCardsFile(file, rows, templates)
+   .then((document) => {
+      console.log(document);
+      fs.writeFileSync(path.join(resourcesPath, 'test.html'), document);
+   });
 
 (async () => {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
+   const browser = await puppeteer.launch();
+   const page = await browser.newPage();
 
-  const index = path.join(__dirname, 'public', 'index.html')
-  await page.goto(`file:${index}`, { waitUntil: 'networkidle0', });
+   const index = path.join(resourcesPath, 'test.html')
+   await page.goto(`file:${index}`, { waitUntil: 'networkidle0', });
 
-  await page.pdf({
-    path: 'output.pdf',
-    format: 'A4',
-    margin: {
-      left: 10,
-      right: 10,
-      top: 10,
-      bottom: 10,
-    }
-  });
-  await browser.close();
+   await page.pdf({
+      path: outputPath,
+      format: 'A4',
+      margin: {
+         left: 10,
+         right: 10,
+         top: 10,
+         bottom: 10,
+      }
+   });
+   await browser.close();
 })();
 
