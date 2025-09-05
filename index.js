@@ -7,15 +7,40 @@ const YAML = require('js-yaml');
 const DEFAULT_TEMPLATES_PATH = path.join(__dirname, 'templates');
 const TEMPLATE = path.join(DEFAULT_TEMPLATES_PATH, 'index.ejs');
 
-function _chunkArray(arr, size) {
+function _partitionArray(array, size) {
   const result = [];
-  for (let i = 0; i < arr.length; i += size) {
-    result.push(arr.slice(i, i + size));
-  }
+
+  for (let i = 0; i < array.length; i += size)
+    result.push(array.slice(i, i + size));
+
   return result;
 }
 
-async function _parseFlashCardsFile(flashCardsContent, batchSize, template) {
+function _parseMargins(margins) {
+   margins = margins.split(',').map(e => e.trim());
+
+   let right, left, bottom, top;
+
+   (() => {
+      top = bottom = left = right = margins.shift();
+
+      if (margins.length === 0) return;
+
+      left = right = margins.shift();
+
+      if (margins.length === 0) return;
+
+      bottom = margins.shift();
+
+      if (margins.length === 0) return;
+
+      left = margins.shift();
+   })();
+
+   return { top, right, bottom, left };
+}
+
+async function _parseFlashCardsFile(flashCardsContent, partitionSize, template) {
    let data = YAML.loadAll(flashCardsContent);
    const heading = data.shift();
 
@@ -25,7 +50,7 @@ async function _parseFlashCardsFile(flashCardsContent, batchSize, template) {
       ...e, ...heading
    }});
 
-   let pages = _chunkArray(data, batchSize);
+   let pages = _partitionArray(data, partitionSize);
    return await ejs.renderFile(template, { pages });
 }
 
@@ -39,10 +64,10 @@ function exportToHTML(sourceFlashPath, outputHTMLPath, options) {
    fs.cpSync(path.join(DEFAULT_TEMPLATES_PATH, 'shared'),
       path.join(outputDirectory, 'shared'), { recursive: true });
 
-   const batchSize = options.columns * options.rows;
+   const partitionSize = options.columns * options.rows;
    const contents = fs.readFileSync(sourceFlashPath, 'utf8');
 
-   _parseFlashCardsFile(contents, batchSize, TEMPLATE)
+   _parseFlashCardsFile(contents, partitionSize, TEMPLATE)
    .then((document) => {
       if (options.debug)
          console.log(document);
@@ -59,13 +84,9 @@ async function exportToPDF(sourceHTMLPath, outputPDFPath, options) {
    await page.pdf({
       path: outputPDFPath,
       format: options.format,
-      margin: {
-         left: '5mm',
-         right: '5mm',
-         top: '5mm',
-         bottom: '5mm',
-      }
+      margin: _parseMargins(options.margins),
    });
+
    await browser.close();
 }
 

@@ -17,7 +17,7 @@ pdf_group.add_argument('--pdf-only', { action: 'store_true' });
 
 parser.add_argument('-c', '--columns', { default: 2 });
 parser.add_argument('-r', '--rows', { default: 4 });
-parser.add_argument('-m', '--margin', { default: '5mm', help: 'specify margins in a similar fashion to css margins but dimensions should be comma separated. (i.e. 10mm,5mm corresponds to 10mm top & bottom margins, 5mm left & right margins). Alternatively you can specify all 4 margins, comma separated of course :D.' });
+parser.add_argument('-m', '--margins', { default: '5mm', help: 'specify margins in a similar fashion to css margins but dimensions should be comma separated. (i.e. 10mm,5mm corresponds to 10mm top & bottom margins, 5mm left & right margins). Alternatively you can specify all 4 margins, comma separated of course :D.' });
 
 parser.add_argument('-o', '--output-directory', { default: path.join('.', 'output') });
 parser.add_argument('-n', '--output-name', { default: '', help: 'name of the resulting pdf and html files' });
