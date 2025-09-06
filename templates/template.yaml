@@ -1,0 +1,8 @@
+heading: Complex Analysis
+
+---
+term: Morera's Theorem
+name: Theorem 7.8
+page: 124
+description: |
+  Let $f$ be continuous on an open set $D$. If $\int_\gamma f(z) dz = 0$ for every contour contained in $D$, then $f$ is holomorphic in $D$.

@@ -6,7 +6,7 @@ const YAML = require('js-yaml');
 
 const utils = require('./utilities');
 
-const DEFAULT_TEMPLATES_PATH = path.join(__dirname, 'templates');
+const DEFAULT_TEMPLATES_PATH = path.join(__dirname, '..', 'templates');
 const TEMPLATE = path.join(DEFAULT_TEMPLATES_PATH, 'index.ejs');
 
 async function _parseFlashCardsFile(flashCardsContent, partitionSize, template) {
@@ -14,8 +14,9 @@ async function _parseFlashCardsFile(flashCardsContent, partitionSize, template) 
    const heading = data.shift();
 
    data = data.map(function(e) { return {
-      list: [], listStyle: "roman",
-      footer: "", page: 0,
+      list: [], listStyle: 'roman',
+      footer: '', name: '', page: 0,
+      heading: '', description: '',
       ...e, ...heading
    }});
 
@@ -43,7 +44,7 @@ async function exportToHTML(sourceFlashPath, outputHTMLPath, options) {
    _parseFlashCardsFile(contents, partitionSize, TEMPLATE)
       .then((document) => {
          fs.writeFileSync(outputHTMLPath, document);
-      });
+      }).catch(err => console.log(err));
 }
 
 async function exportToPDF(sourceHTMLPath, outputPDFPath, options) {

@@ -20,7 +20,12 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function watch(file, callback) {
+function terminate(reason, code) {
+   console.error(reason);
+   process.exit(code);
+}
+
+async function watch(file, callback, interval) {
    let previous = fs.statSync(file).mtime;
 
    while (true) {
@@ -35,7 +40,7 @@ async function watch(file, callback) {
          }
       });
 
-      await sleep(100);
+      await sleep(interval);
    }
 }
 
@@ -78,5 +83,6 @@ module.exports = {
    parseMargins,
    partitionArray,
    sleep,
+   terminate,
    watch,
 }

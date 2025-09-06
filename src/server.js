@@ -3,7 +3,7 @@ const livereload = require('livereload');
 const connectLivereload = require('connect-livereload');
 const open = require('open');
 
-function launch(port, watchPath, indexHtml) {
+function launch(port, watchPath, indexFile, interval) {
    const app = express();
 
    const liveReloadServer = livereload.createServer();
@@ -13,17 +13,19 @@ function launch(port, watchPath, indexHtml) {
    app.use(express.static(watchPath));
 
    app.get('/', (_request, response) => {
-      response.sendFile(indexHtml);
+      response.sendFile(indexFile);
    });
 
    liveReloadServer.server.once("connection", () => {
       setTimeout(() => {
          liveReloadServer.refresh("/");
-      }, 100);
+      }, interval);
    });
 
-   open.default(`http://localhost:${port}`);
-   app.listen(port, () => console.log("Server running on http://localhost:3000"));
+   const url = `http://localhost:${port}`;
+
+   open.default(url);
+   app.listen(port, () => console.log(`Server running on '${url}'`));
 }
 
 module.exports = {
