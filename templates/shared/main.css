@@ -45,6 +45,15 @@ body {
    border-bottom: 1px dashed var(--border-color);
 }
 
+/* Hacks to remove doubled borders */
+.back .card:nth-child(<%- columns _%>n + 1) {
+   border-right: 0;
+}
+
+.back .card:nth-child(1n + <%- (columns * rows) - columns + 1%>) {
+   border-bottom: 0;
+}
+
 .container.back {
    direction: rtl;
 }

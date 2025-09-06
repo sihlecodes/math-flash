@@ -61,11 +61,12 @@ async function exportToHTML(sourceFlashPath, outputHTMLPath, options) {
       fs.mkdirSync(path.join(outputDirectory, 'shared'),
          { recursive: true });
 
-   fs.cpSync(path.join(DEFAULT_TEMPLATES_PATH, 'shared'),
-      path.join(outputDirectory, 'shared'), { recursive: true });
+   const files = fs.globSync(path.join(DEFAULT_TEMPLATES_PATH, 'shared', '*'));
 
-   let contents = await ejs.renderFile(path.join(DEFAULT_TEMPLATES_PATH, 'shared', 'variables.css'), options);
-   fs.writeFileSync(path.join(outputDirectory, 'shared', 'variables.css'), contents);
+   for (const file of files) {
+      let contents = await ejs.renderFile(file, options);
+      fs.writeFileSync(path.join(outputDirectory, 'shared', path.basename(file)), contents);
+   }
 
    const partitionSize = options.columns * options.rows;
    contents = fs.readFileSync(sourceFlashPath, 'utf8');
