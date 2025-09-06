@@ -15,9 +15,9 @@
 
 </head>
 <body>
-    <% pages.forEach(function(metadata) { %>
-      <%- include('container-front', {metadata}) _%>
-      <%- include('container-back', {metadata}) _%>
-    <% }); %>
+  <%_ pages.forEach(function(metadata) { _%>
+  <%- include('container-front', {metadata}) _%>
+  <%- include('container-back', {metadata}) _%>
+  <%_ }); _%>
 </body>
 </html>

@@ -30,7 +30,7 @@ parser.add_argument('flash_file', { metavar: 'FLASH_FILE', help: 'YAML file cont
 
 const args = parser.parse_args();
 
-if (!SUPPORTED_FORMATS.includes(args.format)) {
+if (!SUPPORTED_FORMATS.includes(args.format.toLowerCase())) {
    console.error(`unknown export format '${args.format}'`);
    process.exit(1);
 }

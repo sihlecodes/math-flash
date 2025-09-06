@@ -1,13 +1,13 @@
-<div class="card front">
+<div class="card">
   <div class="content">
   <table>
     <tr><th class="heading" colspan="2"><%- heading _%></th></tr>
     <tr><td class="term" colspan="2"><%- term _%></td></tr>
     <tr><td class="page-number">
-      <% if (page > 0) { _%>
-        <%- "Page " + page _%>
-      <% } else  _%>
-        <% "" _%>
+      <%_ if (page > 0) { _%>
+      <%- "Page " + page _%>
+      <%_ } else  _%>
+      <%_ "" _%>
     </td><td class="name"><%- name _%></td><tr>
   </table>
   </div>
