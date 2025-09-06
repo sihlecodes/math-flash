@@ -3,7 +3,7 @@ heading: Complex Analysis
 ---
 term: Properties of a <b>power series</b>
 description: |
-  A power series $\sum_{n=0}^\infty c_n(z-a)^n$ satisfies exactly one of the following:
+  A <b>power series</b> $\sum_{n=0}^\infty c_n(z-a)^n$ satisfies exactly one of the following:
 list:
   - the series converges $\forall z\in \C$
   - the series converges only for $z=a$
@@ -11,7 +11,7 @@ list:
     there exists a positive $R\in\R$ such that the series converges $\forall z\in \C:|z-a|\lt R$ and diverges $\forall z\in\C : |z-a|\gt R$
 
 name: Theorem 4.3
-page: 45
+page: 89
 
 ---
 term: Complexity <b>differentiability</b> at a <b>single</b> point c.
@@ -23,7 +23,7 @@ page: 0
 
 ---
 term: |
-  Hello <i>this is a</i> slightly longer term, so I can test something using it.
+  Hello <b>this is a</b> slightly longer term, so I can test something using it.
 
 description: |
   Let $S$ be a closed, bounded set, and $f$, with domain containing $\delta$, be continuous. Then $f$ is bounded on $S$; that is $\{|f(z)|:z\in S\}$ is bounded. Moreover if $M=\sup_\delta|f|$, then $\exist z\in S$ such that $|f(z)|=M$.

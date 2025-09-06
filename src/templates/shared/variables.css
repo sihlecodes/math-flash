@@ -1,7 +1,7 @@
 :root {
   --font-size: <%- font_size _%>;
-  --page-width: <%- page_width _%>;
-  --page-height: <%- page_height _%>;
+  --page-width: <%- page_size.width _%>;
+  --page-height: <%- page_size.height _%>;
   --columns: <%= columns _%>;
   --rows: <%= rows _%>;
   <%_ for (const margin of Object.keys(margins)) { _%>

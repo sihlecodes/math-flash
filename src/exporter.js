@@ -4,41 +4,10 @@ const fs = require('fs');
 const ejs = require('ejs');
 const YAML = require('js-yaml');
 
+const utils = require('./utilities');
+
 const DEFAULT_TEMPLATES_PATH = path.join(__dirname, 'templates');
 const TEMPLATE = path.join(DEFAULT_TEMPLATES_PATH, 'index.ejs');
-
-function _partitionArray(array, size) {
-  const result = [];
-
-  for (let i = 0; i < array.length; i += size)
-    result.push(array.slice(i, i + size));
-
-  return result;
-}
-
-function parseMargins(margins) {
-   margins = margins.split(',').map(e => e.trim());
-
-   let right, left, bottom, top;
-
-   (() => {
-      top = bottom = left = right = margins.shift();
-
-      if (margins.length === 0) return;
-
-      left = right = margins.shift();
-
-      if (margins.length === 0) return;
-
-      bottom = margins.shift();
-
-      if (margins.length === 0) return;
-
-      left = margins.shift();
-   })();
-
-   return { top, right, bottom, left };
-}
 
 async function _parseFlashCardsFile(flashCardsContent, partitionSize, template) {
    let data = YAML.loadAll(flashCardsContent);
@@ -50,7 +19,7 @@ async function _parseFlashCardsFile(flashCardsContent, partitionSize, template) 
       ...e, ...heading
    }});
 
-   let pages = _partitionArray(data, partitionSize);
+   let pages = utils.partitionArray(data, partitionSize);
    return await ejs.renderFile(template, { pages });
 }
 
@@ -80,7 +49,9 @@ async function exportToHTML(sourceFlashPath, outputHTMLPath, options) {
 async function exportToPDF(sourceHTMLPath, outputPDFPath, options) {
    const browser = await puppeteer.launch();
    const page = await browser.newPage();
-   await page.goto(`file:${sourceHTMLPath}`, { waitUntil: 'networkidle0', });
+
+   await page.goto(`file:${sourceHTMLPath}`,
+      { waitUntil: 'networkidle0', });
 
    await page.pdf({
       path: outputPDFPath,
@@ -96,6 +67,5 @@ async function exportToPDF(sourceHTMLPath, outputPDFPath, options) {
 module.exports = {
    exportToPDF,
    exportToHTML,
-   parseMargins,
    DEFAULT_TEMPLATES_PATH
 }

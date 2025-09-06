@@ -20,12 +20,12 @@
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "js-yaml": "^4.1.0",
+    "open": "^10.2.0",
     "puppeteer": "^24.19.0"
   },
   "devDependencies": {
     "argparse": "^2.0.1",
     "connect-livereload": "^0.6.1",
-    "livereload": "^0.10.3",
-    "nodemon": "^3.1.10"
+    "livereload": "^0.10.3"
   }
 }

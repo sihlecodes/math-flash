@@ -1,14 +1,12 @@
 #!/usr/bin/env node
 
-const paperSizes = require('@cityssm/paper-sizes');
+const argparse = require('argparse');
 const path = require('path');
 const fs = require('fs');
 
-const argparse = require('argparse');
-const flashCards = require('../index.js');
-const child_process = require('child_process');
-
-const SUPPORTED_FORMATS = ['letter', 'legal', 'tabloid', 'ledger', 'a0', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6'];
+const { exportToPDF, exportToHTML } = require('../src/exporter');
+const utils = require('../src/utilities');
+const server = require('../src/server');
 
 const parser = new argparse.ArgumentParser();
 
@@ -27,82 +25,26 @@ parser.add_argument('-o', '--output-directory', { default: path.join('.', 'outpu
 parser.add_argument('-n', '--output-name', { default: '', help: 'name of the resulting pdf and html files' });
 parser.add_argument('--font-size', { default: '9pt', help: 'specified in css units' });
 
-parser.add_argument('-p', '--port', { default: 3000 });
+const live_group = parser.add_argument_group({ title: 'live preview options' });
+live_group.add_argument('-v', '--view', { action: 'store_true' });
+live_group.add_argument('-p', '--port', { default: 3000 });
 
 parser.add_argument('flash_file', { metavar: 'FLASH_FILE', help: 'YAML file containing flash card definitions' });
 
 const args = parser.parse_args();
 
-const po = path.join(__dirname, '..');
-const other = path.join(po, 'tests', 'chapter1.flash');
-
-function _sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+if (!fs.existsSync(args.flash_file)) {
+   console.error(`file not found '${args.flash_file}'`);
+   process.exit(1);
 }
 
-function server(port, watchPath, indexHtml) {
-   const express = require('express');
-   const livereload = require('livereload');
-   const connectLivereload = require('connect-livereload');
-
-   const app = express();
-
-   const liveReloadServer = livereload.createServer();
-   liveReloadServer.watch(watchPath);
-
-   app.use(connectLivereload());
-   app.use(express.static(watchPath));
-
-   app.get('/', (_request, response) => {
-      response.sendFile(indexHtml);
-   });
-
-   liveReloadServer.server.once("connection", () => {
-      setTimeout(() => {
-         liveReloadServer.refresh("/");
-      }, 100);
-   });
-
-   app.listen(port, () => console.log("Server running on http://localhost:3000"));
-}
-
-async function watch(file) {
-   let lastMTime = new Date(0);
-
-   while (true) {
-      fs.stat(file, (err, stats) => {
-         if (err)
-            return;
-
-         const current = stats.mtime;
-
-         if (current > lastMTime) {
-            // console.log('before: ', lastMTime);
-            // console.log('changed to: ', current);
-            lastMTime = current;
-            const out = child_process.spawn('math-flash', ['--html-only', args.flash_file, '-o', args.output_directory]);
-            out.stderr.on('data', chunk => console.error(chunk));
-         }
-      });
-
-      await _sleep(100);
-   }
-}
-
-if (!SUPPORTED_FORMATS.includes(args.format.toLowerCase())) {
+if (!utils.isSupportedPageFormat(args.format)) {
    console.error(`unknown export format '${args.format}'`);
    process.exit(1);
 }
 
-let { width, height, unit } = paperSizes.getPaperSize(args.format);
-
-if (args.landscape)
-   [ width, height ] = [ height, width ];
-
-args.page_width = `${width}${unit}`;
-args.page_height = `${height}${unit}`;
-
-args.margins = flashCards.parseMargins(args.margins);
+args.page_size = utils.getPageFormatDimensions(args.format, args.landscape);
+args.margins = utils.parseMargins(args.margins);
 args.output_directory = path.resolve(args.output_directory);
 
 args.output_name = path.parse((args.output_name === '')
@@ -112,30 +54,27 @@ const outputHTMLName = path.join(args.output_directory, args.output_name + '.htm
 const outputPDFName = path.join(args.output_directory, args.output_name + '.pdf');
 
 if (args.view) {
-   watch(other);
-   server(3000, args.output_directory, outputHTMLName);
+   utils.watch(args.flash_file,
+      () => exportToHTML(args.flash_file, outputHTMLName, args));
+
+   server.launch(args.port, args.output_directory, outputHTMLName);
 }
 
-if (!fs.existsSync(args.flash_file)) {
-   console.error(`file not found '${args.flash_file}'`);
-   process.exit(1); 
+exportToHTML(args.flash_file, outputHTMLName, args);
+
+if (args.html_only) {
+   process.exit(0);
 }
 
-flashCards.exportToHTML(args.flash_file, outputHTMLName, args);
+exportToPDF(outputHTMLName, outputPDFName, args).then(() => {
+   if (!args.pdf_only)
+      return;
 
-if (!args.html_only) {
-   flashCards.exportToPDF(outputHTMLName, outputPDFName, args).then(() => {
-      if (!args.pdf_only)
-         return;
+   const resourcesPath = path.join(args.output_directory, 'shared');
 
-      const resourcesPath = path.join(args.output_directory, 'shared');
+   if (fs.existsSync(resourcesPath))
+      fs.rmSync(resourcesPath, { recursive: true });
 
-      if (fs.existsSync(resourcesPath))
-         fs.rmSync(resourcesPath, { recursive: true });
-
-      if (fs.existsSync(outputHTMLName))
-         fs.rmSync(outputHTMLName);
-   });
-}
-else if (fs.existsSync(outputPDFName))
-   fs.rmSync(outputPDFName);
+   if (fs.existsSync(outputHTMLName))
+      fs.rmSync(outputHTMLName);
+});
