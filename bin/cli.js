@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 
-const paperSizes = require('@cityssm/paper-sizes');
+const argparse = require('argparse');
 const path = require('path');
 const fs = require('fs');
 
-const argparse = require('argparse');
-const flashCards = require('../index.js');
+const { DEFAULT_TEMPLATES_PATH, exportToPDF, exportToHTML } = require('../src/exporter');
 
-const SUPPORTED_FORMATS = ['letter', 'legal', 'tabloid', 'ledger', 'a0', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6'];
+const utils = require('../src/utilities');
+const server = require('../src/server');
 
 const parser = new argparse.ArgumentParser();
 
-const xor_group = parser.add_mutually_exclusive_group();
-xor_group.add_argument('--html-only', { action: 'store_true' });
-xor_group.add_argument('--pdf-only', { action: 'store_true' });
+const xorGroup = parser.add_mutually_exclusive_group();
+xorGroup.add_argument('--html-only', { action: 'store_true' });
+xorGroup.add_argument('--pdf-only', { action: 'store_true' });
 
 const group = parser.add_argument_group({ title: 'export options' });
 group.add_argument('-f', '--format', { default: 'A4', help: 'pdf output format; defaults to A4. (note: ignored if --html-only is used along with this option.)' });
@@ -26,24 +26,34 @@ parser.add_argument('-o', '--output-directory', { default: path.join('.', 'outpu
 parser.add_argument('-n', '--output-name', { default: '', help: 'name of the resulting pdf and html files' });
 parser.add_argument('--font-size', { default: '9pt', help: 'specified in css units' });
 
+const liveGroup = parser.add_argument_group({ title: 'live preview options' });
+liveGroup.add_argument('-v', '--view', { action: 'store_true', help: 'launch a live preview in the browser' });
+liveGroup.add_argument('-p', '--port', { default: 3000 });
+liveGroup.add_argument('--check-interval', { default: 100, help: 'interval for checking flash file changes (in milliseconds) (note: also affects the interval that the browser gets refreshed)' });
+
+parser.add_argument('-g', '--generate', { action: 'store_true', help: 'create a new flash card file using the default template' })
 parser.add_argument('flash_file', { metavar: 'FLASH_FILE', help: 'YAML file containing flash card definitions' });
 
 const args = parser.parse_args();
 
-if (!SUPPORTED_FORMATS.includes(args.format.toLowerCase())) {
-   console.error(`unknown export format '${args.format}'`);
-   process.exit(1);
+if (args.generate && fs.existsSync(args.flash_file))
+   utils.terminate(`file '${args.flash_file}' already exists`, 1);
+
+if (args.generate) {
+   const template = path.join(DEFAULT_TEMPLATES_PATH, 'template.yaml');
+   fs.writeFileSync(args.flash_file, fs.readFileSync(template, 'utf8'));
+   process.exit(0);
 }
 
-let { width, height, unit } = paperSizes.getPaperSize(args.format);
+if (!fs.existsSync(args.flash_file))
+   utils.terminate(`file not found '${args.flash_file}'`, 1);
 
-if (args.landscape)
-   [ width, height ] = [ height, width ];
 
-args.page_width = `${width}${unit}`;
-args.page_height = `${height}${unit}`;
+if (!utils.isSupportedPageFormat(args.format))
+   utils.terminate(`unknown export format '${args.format}'`, 1);
 
-args.margins = flashCards.parseMargins(args.margins);
+args.page_size = utils.getPageFormatDimensions(args.format, args.landscape);
+args.margins = utils.parseMargins(args.margins);
 args.output_directory = path.resolve(args.output_directory);
 
 args.output_name = path.parse((args.output_name === '')
@@ -52,26 +62,27 @@ args.output_name = path.parse((args.output_name === '')
 const outputHTMLName = path.join(args.output_directory, args.output_name + '.html');
 const outputPDFName = path.join(args.output_directory, args.output_name + '.pdf');
 
-if (!fs.existsSync(args.flash_file)) {
-   console.error(`file not found '${args.flash_file}'`);
-   process.exit(1); 
+if (args.view) {
+   utils.watch(args.flash_file,
+      () => exportToHTML(args.flash_file, outputHTMLName, args), args.check_interval);
+
+   server.launch(args.port, args.output_directory, outputHTMLName, args.check_interval);
 }
 
-flashCards.exportToHTML(args.flash_file, outputHTMLName, args);
+exportToHTML(args.flash_file, outputHTMLName, args);
 
-if (!args.html_only) {
-   flashCards.exportToPDF(outputHTMLName, outputPDFName, args).then(() => {
-      if (!args.pdf_only)
-         return;
+if (args.html_only)
+   process.exit(0);
 
-      const resourcesPath = path.join(args.output_directory, 'shared');
+exportToPDF(outputHTMLName, outputPDFName, args).then(() => {
+   if (!args.pdf_only)
+      return;
 
-      if (fs.existsSync(resourcesPath))
-         fs.rmSync(resourcesPath, { recursive: true });
+   const resourcesPath = path.join(args.output_directory, 'shared');
 
-      if (fs.existsSync(outputHTMLName))
-         fs.rmSync(outputHTMLName);
-   });
-}
-else if (fs.existsSync(outputPDFName))
-   fs.rmSync(outputPDFName);
+   if (fs.existsSync(resourcesPath))
+      fs.rmSync(resourcesPath, { recursive: true });
+
+   if (fs.existsSync(outputHTMLName))
+      fs.rmSync(outputHTMLName);
+});
