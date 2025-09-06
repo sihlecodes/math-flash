@@ -7,7 +7,9 @@
   "preferGlobal": true,
   "scripts": {},
   "keywords": [
-    "flashcard", "math", "katex"
+    "flashcard",
+    "math",
+    "katex"
   ],
   "author": "Siphesihle Mhlongo",
   "license": "MIT",

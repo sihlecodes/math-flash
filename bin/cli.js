@@ -6,6 +6,7 @@ const fs = require('fs');
 
 const argparse = require('argparse');
 const flashCards = require('../index.js');
+const child_process = require('child_process');
 
 const SUPPORTED_FORMATS = ['letter', 'legal', 'tabloid', 'ledger', 'a0', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6'];
 
@@ -26,9 +27,67 @@ parser.add_argument('-o', '--output-directory', { default: path.join('.', 'outpu
 parser.add_argument('-n', '--output-name', { default: '', help: 'name of the resulting pdf and html files' });
 parser.add_argument('--font-size', { default: '9pt', help: 'specified in css units' });
 
+parser.add_argument('-p', '--port', { default: 3000 });
+
 parser.add_argument('flash_file', { metavar: 'FLASH_FILE', help: 'YAML file containing flash card definitions' });
 
 const args = parser.parse_args();
+
+const po = path.join(__dirname, '..');
+const other = path.join(po, 'tests', 'chapter1.flash');
+
+function _sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function server(port, watchPath, indexHtml) {
+   const express = require('express');
+   const livereload = require('livereload');
+   const connectLivereload = require('connect-livereload');
+
+   const app = express();
+
+   const liveReloadServer = livereload.createServer();
+   liveReloadServer.watch(watchPath);
+
+   app.use(connectLivereload());
+   app.use(express.static(watchPath));
+
+   app.get('/', (_request, response) => {
+      response.sendFile(indexHtml);
+   });
+
+   liveReloadServer.server.once("connection", () => {
+      setTimeout(() => {
+         liveReloadServer.refresh("/");
+      }, 100);
+   });
+
+   app.listen(port, () => console.log("Server running on http://localhost:3000"));
+}
+
+async function watch(file) {
+   let lastMTime = new Date(0);
+
+   while (true) {
+      fs.stat(file, (err, stats) => {
+         if (err)
+            return;
+
+         const current = stats.mtime;
+
+         if (current > lastMTime) {
+            // console.log('before: ', lastMTime);
+            // console.log('changed to: ', current);
+            lastMTime = current;
+            const out = child_process.spawn('math-flash', ['--html-only', args.flash_file, '-o', args.output_directory]);
+            out.stderr.on('data', chunk => console.error(chunk));
+         }
+      });
+
+      await _sleep(100);
+   }
+}
 
 if (!SUPPORTED_FORMATS.includes(args.format.toLowerCase())) {
    console.error(`unknown export format '${args.format}'`);
@@ -51,6 +110,11 @@ args.output_name = path.parse((args.output_name === '')
 
 const outputHTMLName = path.join(args.output_directory, args.output_name + '.html');
 const outputPDFName = path.join(args.output_directory, args.output_name + '.pdf');
+
+if (args.view) {
+   watch(other);
+   server(3000, args.output_directory, outputHTMLName);
+}
 
 if (!fs.existsSync(args.flash_file)) {
    console.error(`file not found '${args.flash_file}'`);
