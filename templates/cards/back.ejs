@@ -1,15 +1,19 @@
 <div class="card">
    <div class="content">
-      <%- description _%>
+      <div class="description">
+         <%- description _%>
+      </div>
       <%_ if (list.length > 0) { _%>
-      <ol class="<%= listStyle _%>">
+      <ol class="<%= listStyle %> list">
          <%_ list.forEach(function(item) { _%>
-            <li><%- item _%></li>
+         <li><%- item _%></li>
          <%_ }) _%>
       </ol>
       <%_ } _%>
       <%_ if (footer) { _%>
-         <br><%- footer _%>
+      <div class="footer">
+         <%- footer _%>
+      </div>
       <%_ } _%>
    </div>
 </div>

@@ -1,8 +1,15 @@
-heading: Complex Analysis
+heading: Abstract Algebra
 
 ---
-term: Morera's Theorem
-name: Theorem 7.8
+term: Conditions for $H\sub G$ to be a <b>subgroup</b> (3-step).
+name: Proposition 2.9
 page: 124
 description: |
-  Let $f$ be continuous on an open set $D$. If $\int_\gamma f(z) dz = 0$ for every contour contained in $D$, then $f$ is holomorphic in $D$.
+  A subset $H$ of $G$ is a subgroup if and only if it satisfies the following conditions.
+listStyle: decimal
+list:
+  - The identity e of G is in H.
+  - If $h_1,h_2\in H$, then $h_1h_2\in H$
+  - If $h \in H$, then $h^{-1}\in H$
+footer:
+  Footer text goes here

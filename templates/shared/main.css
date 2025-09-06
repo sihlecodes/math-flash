@@ -80,8 +80,13 @@ body {
    height: 100%;
 }
 
-.card .description {
-   text-align: justify;
+/* .card .description { */
+   /* background-color: red; */
+/* } */
+
+.card .list {
+   margin: 0.6em 0;
+   line-height: 1.65;
 }
 
 .card .heading {
@@ -106,4 +111,8 @@ body {
 
 ol.roman {
    list-style: lower-roman;
+}
+
+ol.decimal {
+   list-style: decimal;
 }
