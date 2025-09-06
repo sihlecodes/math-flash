@@ -2,7 +2,7 @@
    <div class="content">
       <%- description _%>
       <%_ if (list.length > 0) { %>
-      <ol style="<%= listStyle %>">
+      <ol class="<%= listStyle %>">
          <% list.forEach(function(item) { %>
             <li><%- item _%></li>
          <% }) %>

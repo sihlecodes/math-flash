@@ -2,21 +2,19 @@
   "name": "test",
   "version": "1.0.0",
   "bin": {
-    "flash-cards": "./bin/cli.js"
+    "math-flash": "./bin/cli.js"
   },
   "preferGlobal": true,
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "keywords": [
-    "flashcard"
+    "flashcard", "math", "katex"
   ],
   "author": "Siphesihle Mhlongo",
   "license": "MIT",
   "type": "commonjs",
   "description": "",
   "dependencies": {
+    "@cityssm/paper-sizes": "^1.0.1",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "js-yaml": "^4.1.0",

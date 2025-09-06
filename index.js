@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const path = require('path');
 const fs = require('fs');
-const ejs = require('ejs')
+const ejs = require('ejs');
 const YAML = require('js-yaml');
 
 const DEFAULT_TEMPLATES_PATH = path.join(__dirname, 'templates');
@@ -71,12 +71,9 @@ async function exportToHTML(sourceFlashPath, outputHTMLPath, options) {
    contents = fs.readFileSync(sourceFlashPath, 'utf8');
 
    _parseFlashCardsFile(contents, partitionSize, TEMPLATE)
-   .then((document) => {
-      if (options.debug)
-         console.log(document);
-
-      fs.writeFileSync(outputHTMLPath, document);
-   });
+      .then((document) => {
+         fs.writeFileSync(outputHTMLPath, document);
+      });
 }
 
 async function exportToPDF(sourceHTMLPath, outputPDFPath, options) {
@@ -88,6 +85,8 @@ async function exportToPDF(sourceHTMLPath, outputPDFPath, options) {
       path: outputPDFPath,
       format: options.format,
       margin: options.margins,
+      landscape: options.landscape,
+      printBackground: true,
    });
 
    await browser.close();
