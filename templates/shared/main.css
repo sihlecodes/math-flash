@@ -4,12 +4,14 @@
 
 * {
    margin: 0;
+   box-sizing: border-box;
+   border-collapse: collapse;
 }
 
 body {
    font-family: sans-serif;
-   line-height: 1.5;
-   font-size: 9pt;
+   line-height: 1.4;
+   font-size: var(--font-size);
 }
 
 .container {
@@ -20,7 +22,7 @@ body {
    grid-template-columns: repeat(var(--columns), 1fr);
    grid-template-rows: repeat(var(--rows), 1fr);
    gap: 0;
-   border: 2 dashed var(--border-color);
+   border: 1px dashed var(--border-color);
 }
 
 .card {
@@ -34,13 +36,13 @@ body {
    align-items: center;
    justify-content: center;
    direction: ltr;
-   box-sizing: border-box;
 }
 
 .back .card {
-   --vertical-padding: 0px;
+   --vertical-padding: 0;
 
-   border: 1px dashed var(--border-color);
+   border-right: 1px dashed var(--border-color);
+   border-bottom: 1px dashed var(--border-color);
 }
 
 .container.back {
