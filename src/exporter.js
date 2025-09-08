@@ -26,16 +26,16 @@ async function _parseFlashCardsFile(flashCardsContent, partitionSize, template) 
 
 async function exportToHTML(sourceFlashPath, outputHTMLPath, options) {
    const outputDirectory = path.dirname(outputHTMLPath);
+   const sharedDirectory = path.join(outputDirectory, 'shared');
 
-   if (!fs.existsSync(outputDirectory))
-      fs.mkdirSync(path.join(outputDirectory, 'shared'),
-         { recursive: true });
+   if (!fs.existsSync(sharedDirectory))
+      fs.mkdirSync(sharedDirectory, { recursive: true });
 
    const files = fs.globSync(path.join(DEFAULT_TEMPLATES_PATH, 'shared', '*'));
 
    for (const file of files) {
       let contents = await ejs.renderFile(file, options);
-      fs.writeFileSync(path.join(outputDirectory, 'shared', path.basename(file)), contents);
+      fs.writeFileSync(path.join(sharedDirectory, path.basename(file)), contents);
    }
 
    const partitionSize = options.columns * options.rows;
