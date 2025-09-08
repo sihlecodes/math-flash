@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', function() {
       {left: "$", right: "$", display: false}
     ],
     macros: {
+      "\\N": "\\mathbb{N}",
+      "\\Z": "\\mathbb{Z}",
+      "\\Q": "\\mathbb{Q}",
       "\\R": "\\mathbb{R}",
       "\\C": "\\mathbb{C}",
       "\\e": "\\exist",

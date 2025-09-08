@@ -15,7 +15,7 @@ async function _parseFlashCardsFile(flashCardsContent, partitionSize, template) 
 
    data = data.map(function(e) { return {
       list: [], listStyle: 'roman',
-      footer: '', name: '', page: 0,
+      footer: '', name: '', page: '',
       heading: '', description: '',
       ...e, ...heading
    }});
