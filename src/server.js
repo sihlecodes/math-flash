@@ -3,7 +3,7 @@ const livereload = require('livereload');
 const connectLivereload = require('connect-livereload');
 const open = require('open');
 
-function launch(port, watchPath, indexFile, interval) {
+function launch(port, watchPath, indexFile) {
    const app = express();
 
    const liveReloadServer = livereload.createServer();
@@ -12,15 +12,8 @@ function launch(port, watchPath, indexFile, interval) {
    app.use(connectLivereload());
    app.use(express.static(watchPath));
 
-   app.get('/', (_request, response) => {
-      response.sendFile(indexFile);
-   });
-
-   liveReloadServer.server.once("connection", () => {
-      setTimeout(() => {
-         liveReloadServer.refresh("/");
-      }, interval);
-   });
+   app.get('/', (_request, response) =>
+      response.sendFile(indexFile));
 
    const url = `http://localhost:${port}`;
 

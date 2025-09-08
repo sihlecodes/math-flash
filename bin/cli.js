@@ -3,6 +3,7 @@
 const argparse = require('argparse');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 
 const { DEFAULT_TEMPLATES_PATH, exportToPDF, exportToHTML } = require('../src/exporter');
 
@@ -48,41 +49,47 @@ if (args.generate) {
 if (!fs.existsSync(args.flash_file))
    utils.terminate(`file not found '${args.flash_file}'`, 1);
 
-
 if (!utils.isSupportedPageFormat(args.format))
    utils.terminate(`unknown export format '${args.format}'`, 1);
 
 args.page_size = utils.getPageFormatDimensions(args.format, args.landscape);
 args.margins = utils.parseMargins(args.margins);
 args.output_directory = path.resolve(args.output_directory);
+args.intermediate_output_directory = args.output_directory;
+
+if (fs.existsSync(args.output_directory))
+   fs.mkdirSync(args.output_directory, { recursive: true });
+
+if (args.pdf_only) {
+   const prefix = path.join(os.tmpdir(), 'math-flash-');
+   const folder = fs.mkdtempSync(prefix);
+   args.intermediate_output_directory = folder;
+}
 
 args.output_name = path.parse((args.output_name === '')
    ? args.flash_file : args.output_name).name;
 
-const outputHTMLName = path.join(args.output_directory, args.output_name + '.html');
+const outputHTMLName = path.join(args.intermediate_output_directory, args.output_name + '.html');
 const outputPDFName = path.join(args.output_directory, args.output_name + '.pdf');
 
 if (args.view) {
    utils.watch(args.flash_file,
       () => exportToHTML(args.flash_file, outputHTMLName, args), args.check_interval);
 
-   server.launch(args.port, args.output_directory, outputHTMLName, args.check_interval);
+   server.launch(args.port, args.output_directory, outputHTMLName);
 }
 
-exportToHTML(args.flash_file, outputHTMLName, args);
+(async function main() {
+   await exportToHTML(args.flash_file, outputHTMLName, args);
 
-if (args.html_only)
-   process.exit(0);
+   if (args.html_only)
+      return;
 
-exportToPDF(outputHTMLName, outputPDFName, args).then(() => {
+   await exportToPDF(outputHTMLName, outputPDFName, args)
+
    if (!args.pdf_only)
       return;
 
-   const resourcesPath = path.join(args.output_directory, 'shared');
-
-   if (fs.existsSync(resourcesPath))
-      fs.rmSync(resourcesPath, { recursive: true });
-
-   if (fs.existsSync(outputHTMLName))
-      fs.rmSync(outputHTMLName);
-});
+   if (fs.existsSync(args.intermediate_output_directory))
+      fs.rmSync(args.intermediate_output_directory, { recursive: true });
+})();

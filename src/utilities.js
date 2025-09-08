@@ -29,14 +29,14 @@ async function watch(file, callback, interval) {
    let previous = fs.statSync(file).mtime;
 
    while (true) {
-      fs.stat(file, (err, stats) => {
+      fs.stat(file, async (err, stats) => {
          if (err) return;
 
          const current = stats.mtime;
 
          if (current > previous) {
             previous = current;
-            callback()
+            await callback();
          }
       });
 

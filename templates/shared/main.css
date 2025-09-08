@@ -80,8 +80,8 @@ body {
    height: 100%;
 }
 
-/* .card .description { */
-   /* background-color: red; */
+/* .card .description, .card .footer { */
+/*    text-align: justify; */
 /* } */
 
 .card .list {
@@ -109,10 +109,43 @@ body {
    padding: 0 15%;
 }
 
+ol li {
+   padding-left: 0.3em;
+}
+
 ol.roman {
    list-style: lower-roman;
 }
 
 ol.decimal {
    list-style: decimal;
+}
+
+ol.alpha {
+   list-style: lower-alpha;
+}
+
+ol.bracket li {
+   position: relative;
+   counter-increment: list-counter;
+   list-style: none;
+}
+
+ol.bracket li::before {
+   position: absolute;
+   text-align: right;
+   width: 2em;
+   left: -2.2em;
+}
+
+ol.bracket.roman li::before {
+   content: counter(list-counter, lower-roman) ")";
+}
+
+ol.bracket.decimal li::before {
+   content: counter(list-counter, decimal) ")";
+}
+
+ol.bracket.alpha li::before {
+   content: counter(list-counter, lower-alpha) ")";
 }
