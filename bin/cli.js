@@ -30,24 +30,24 @@ parser.add_argument('--font-size', { default: '9pt', help: 'specified in css uni
 const liveGroup = parser.add_argument_group({ title: 'live preview options' });
 liveGroup.add_argument('-v', '--view', { action: 'store_true', help: 'launch a live preview in the browser' });
 liveGroup.add_argument('-p', '--port', { default: 3000 });
-liveGroup.add_argument('--check-interval', { default: 100, help: 'interval for checking flash file changes (in milliseconds) (note: also affects the interval that the browser gets refreshed)' });
+liveGroup.add_argument('--check-interval', { default: 100, help: 'interval for checking flash file changes (in milliseconds)' });
 
 parser.add_argument('-g', '--generate', { action: 'store_true', help: 'create a new flash card file using the default template' })
-parser.add_argument('flash_file', { metavar: 'FLASH_FILE', help: 'YAML file containing flash card definitions' });
+parser.add_argument('flash_card_file', { metavar: 'FLASH_CARD_FILE', help: 'YAML file containing flash card definitions' });
 
 const args = parser.parse_args();
 
-if (args.generate && fs.existsSync(args.flash_file))
-   utils.terminate(`file '${args.flash_file}' already exists`, 1);
+if (args.generate && fs.existsSync(args.flash_card_file))
+   utils.terminate(`file '${args.flash_card_file}' already exists`, 1);
 
 if (args.generate) {
    const template = path.join(DEFAULT_TEMPLATES_PATH, 'template.yaml');
-   fs.writeFileSync(args.flash_file, fs.readFileSync(template, 'utf8'));
+   fs.writeFileSync(args.flash_card_file, fs.readFileSync(template, 'utf8'));
    process.exit(0);
 }
 
-if (!fs.existsSync(args.flash_file))
-   utils.terminate(`file not found '${args.flash_file}'`, 1);
+if (!fs.existsSync(args.flash_card_file))
+   utils.terminate(`file not found '${args.flash_card_file}'`, 1);
 
 if (!utils.isSupportedPageFormat(args.format))
    utils.terminate(`unknown export format '${args.format}'`, 1);
@@ -67,20 +67,20 @@ if (args.pdf_only) {
 }
 
 args.output_name = path.parse((args.output_name === '')
-   ? args.flash_file : args.output_name).name;
+   ? args.flash_card_file : args.output_name).name;
 
 const outputHTMLName = path.join(args.intermediate_output_directory, args.output_name + '.html');
 const outputPDFName = path.join(args.output_directory, args.output_name + '.pdf');
 
 if (args.view) {
-   utils.watch(args.flash_file,
-      () => exportToHTML(args.flash_file, outputHTMLName, args), args.check_interval);
+   utils.watch(args.flash_card_file,
+      () => exportToHTML(args.flash_card_file, outputHTMLName, args), args.check_interval);
 
    server.launch(args.port, args.output_directory, outputHTMLName);
 }
 
 (async function main() {
-   await exportToHTML(args.flash_file, outputHTMLName, args);
+   await exportToHTML(args.flash_card_file, outputHTMLName, args);
 
    if (args.html_only)
       return;
