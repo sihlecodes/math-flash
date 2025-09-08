@@ -76,7 +76,7 @@ if (args.view) {
    utils.watch(args.flash_file,
       () => exportToHTML(args.flash_file, outputHTMLName, args), args.check_interval);
 
-   server.launch(args.port, args.output_directory, outputHTMLName, args.check_interval);
+   server.launch(args.port, args.output_directory, outputHTMLName);
 }
 
 (async function main() {
