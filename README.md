@@ -1,4 +1,4 @@
-<img src="images/banner.svg" alt="Banner image">
+<img src="https://github.com/sihlecodes/math-flash/blob/main/images/banner.svg" alt="Banner image">
 
 # Math Flash⚡
 A cli tool for creating custom printable flash cards. Math flash comes with a host features such changing the number of flash cards printed on a single page, changing page sizes, previewing flash cards in realtime and more. 🙃 

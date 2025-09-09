@@ -1,6 +1,6 @@
 {
   "name": "math-flash",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "bin": {
     "math-flash": "./bin/cli.js"
   },
@@ -14,7 +14,7 @@
   "author": "Siphesihle Mhlongo",
   "license": "MIT",
   "type": "commonjs",
-  "description": "",
+  "description": "A cli tool for creating custom printable flash cards.",
   "dependencies": {
     "argparse": "^2.0.1",
     "@cityssm/paper-sizes": "^1.0.1",
