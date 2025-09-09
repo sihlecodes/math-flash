@@ -37,6 +37,11 @@ parser.add_argument('flash_card_file', { metavar: 'FLASH_CARD_FILE', help: 'YAML
 
 const args = parser.parse_args();
 
+args.output_name = path.parse((args.output_name === '')
+   ? args.flash_card_file : args.output_name).name;
+
+args.flash_card_file = args.output_name + '.yaml';
+
 if (args.generate && fs.existsSync(args.flash_card_file))
    utils.terminate(`file '${args.flash_card_file}' already exists`, 1);
 
@@ -65,9 +70,6 @@ if (args.pdf_only) {
    const folder = fs.mkdtempSync(prefix);
    args.intermediate_output_directory = folder;
 }
-
-args.output_name = path.parse((args.output_name === '')
-   ? args.flash_card_file : args.output_name).name;
 
 const outputHTMLName = path.join(args.intermediate_output_directory, args.output_name + '.html');
 const outputPDFName = path.join(args.output_directory, args.output_name + '.pdf');
