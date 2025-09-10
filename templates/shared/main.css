@@ -120,7 +120,7 @@ body {
 }
 
 ol {
-   padding-left: 2em;
+   padding-left: 2.1em;
 }
 
 ol li {
@@ -139,17 +139,21 @@ ol.alpha {
    list-style: lower-alpha;
 }
 
-ol.bracket li {
+ol:is(.bracket, .unnumbered) li {
    position: relative;
    counter-increment: list-counter;
    list-style: none;
 }
 
-ol.bracket li::before {
+ol:is(.bracket, .unnumbered) li::before {
    position: absolute;
    text-align: right;
    width: 2em;
    left: -2.2em;
+}
+
+ol.unnumbered li::before {
+   content: '●';
 }
 
 ol.bracket.roman li::before {
