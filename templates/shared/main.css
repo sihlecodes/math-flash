@@ -1,5 +1,6 @@
 :root {
    --border-color: rgba(0, 0, 0, 8%);
+   --font-family: sans-serif;
 }
 
 * {
@@ -14,15 +15,20 @@ body {
    font-size: var(--font-size);
 }
 
+.katex .text {
+   font-family: var(--font-family);
+   font-size: var(--font-size);
+}
+
 .container {
    display: grid;
-   width: calc(var(--page-width) - var(--margin-left) - var(--margin-right));
-   height: calc(var(--page-height) - var(--margin-top) - var(--margin-bottom));
-   page-break-after: always;
+   gap: 0;
    grid-template-columns: repeat(var(--columns), 1fr);
    grid-template-rows: repeat(var(--rows), 1fr);
-   gap: 0;
+   width: calc(var(--page-width) - var(--margin-left) - var(--margin-right));
+   height: calc(var(--page-height) - var(--margin-top) - var(--margin-bottom));
    border: 1px dashed var(--border-color);
+   page-break-after: always;
 }
 
 .card {
@@ -78,6 +84,10 @@ body {
    display: flex;
    flex-direction: column;
    height: 100%;
+   background-image: url('./delta.svg');
+   background-repeat: no-repeat;
+   background-position: center;
+   background-size: auto 50%;
 }
 
 /* .card .description, .card .footer { */
@@ -109,8 +119,12 @@ body {
    padding: 0 15%;
 }
 
+ol {
+   padding-left: 2em;
+}
+
 ol li {
-   padding-left: 0.3em;
+   padding-left: 0.4em;
 }
 
 ol.roman {
