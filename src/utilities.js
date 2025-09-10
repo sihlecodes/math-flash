@@ -33,12 +33,18 @@ async function watch(file, callback, interval) {
          const stats = fs.statSync(file);
          const current = stats.mtime;
 
+
          if (current > previous) {
+            console.log('File updated at:', current);
             previous = current;
             await callback();
          }
+         else if (current < previous) {
+            [ previous, current ] = [ current, previous ];
+            console.log('A contradiction:', previous, '>', current);
+         }
       } catch (err) {
-         console.error(err);
+         console.error('An error occured at:', new Date()) ;
       }
 
       await sleep(interval);
