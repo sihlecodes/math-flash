@@ -4,10 +4,11 @@
     <tr><th class="heading" colspan="2"><%- heading _%></th></tr>
     <tr><td class="term" colspan="2"><%- term _%></td></tr>
     <tr><td class="page-number">
-      <%_ if (page !== '') { _%>
+      <%_ if (isNaN(page)) { _%>
+      <%- page _%>
+      <%_ } else { _%>
       <%- "Page " + page _%>
-      <%_ } else  _%>
-      <%_ "" _%>
+      <%_ } _%>
     </td><td class="alias"><%- alias _%></td><tr>
   </table>
   </div>
