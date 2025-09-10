@@ -11,8 +11,11 @@ document.addEventListener('DOMContentLoaded', function() {
       "\\Q": "\\mathbb{Q}",
       "\\R": "\\mathbb{R}",
       "\\C": "\\mathbb{C}",
-      "\\e": "\\exist",
+      "\\te": "\\exist",
       "\\fa": "\\forall",
+      "\\t": "\\enskip\\text{#1}\\enskip",
+      "\\Re": "\\thinspace\\text{Re}\\thinspace #1",
+      "\\Im": "\\thinspace\\text{Im}\\thinspace #1",
     }
   })
 });
