@@ -17,6 +17,11 @@ function launch(port, watchPath, indexFile, shouldOpenBrowser) {
 
    const url = `http://localhost:${port}`;
 
+   liveReloadServer.server.once('connection', () => {
+      setTimeout(() =>
+         liveReloadServer.refresh('/'), 100);
+   });
+
    if (shouldOpenBrowser)
       open.default(url);
 

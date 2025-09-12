@@ -26,29 +26,29 @@ function terminate(reason, code) {
 }
 
 async function watch(file, callback, interval) {
-   let previous = fs.statSync(file).mtime;
+   const options = {
+      persistent: true,
+      interval
+   };
 
-   while (true) {
-      try {
-         const stats = fs.statSync(file);
-         const current = stats.mtime;
+   await callback();
 
+   const watcher = fs.watchFile(file, options, async(current, previous) => {
+      if (current.mtime !== previous.mtime) {
+         try {
+            fs.accessSync(file, fs.constants.F_OK);
 
-         if (current > previous) {
-            console.log('File updated at:', current);
-            previous = current;
+            console.log('Flash card file updated at:', current.mtime);
             await callback();
-         }
-         else if (current < previous) {
-            [ previous, current ] = [ current, previous ];
-            console.log('A contradiction:', previous, '>', current);
-         }
-      } catch (err) {
-         console.error('An error occured at:', new Date()) ;
-      }
 
-      await sleep(interval);
-   }
+         } catch (err) {
+            console.error(`Flash card file '${file}' is inaccessible.`);
+         }
+      }
+   });
+
+   watcher.on('error', err =>
+      console.error('An error occurred with the file watcher:', err));
 }
 
 function partitionArray(array, size) {
