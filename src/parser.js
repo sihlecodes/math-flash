@@ -21,21 +21,32 @@ function parseFlashCardField(contents) {
 
       // text inside math blocks
       if (segment.includes('$')) { 
+         // console.log('before:', segment);
          segment = segment
-            .replace(/(?<=\$\$) $/, '')
-            .replace(/(?<=\$) | (?=\$)/g, '&ensp;');
+            .replace(/(?<=^ ?\$)([^\$]{2,})(?=\$)/, m => {
+               if (m.startsWith('!'))
+                  return m.slice(1);
 
+               // keeps the text of inline equations together
+               return `{${m}}`
+            })
+            .replace(/(?<=\$\$) $/, '')
+            .replace(/(^ | $)/g, '&ensp;');
+         // console.log('after:', segment, '\n');
       }
-      // text outside math blocks
       else {
          segment = segment
             .replace(/\*([^*]*?)\*/g, '<b>$1</b>')
             .replace(/_([^*]*?)_/g, '<i>$1</i>')
-            .replace(/\\ /g, '&ensp;');
+            .replace(/\\ /g, '&ensp;')
+            .replace(/\\~/g, '&nbsp;');
       }
 
       segments.push(segment);
    }
+
+   // console.log('before:', `'${contents}'`);
+   // console.log('after:', `'${segments.join('')}'\n`);
 
    return segments.join('');
 }
