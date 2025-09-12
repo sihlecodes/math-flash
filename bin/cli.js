@@ -33,15 +33,13 @@ liveGroup.add_argument('-p', '--port', { default: 3000 });
 liveGroup.add_argument('--check-interval', { default: 100, help: 'interval for checking flash file changes (in milliseconds)' });
 liveGroup.add_argument('--no-open', { action: 'store_true', help: 'start the preview server without opening the browser.' });
 
-parser.add_argument('-g', '--generate', { action: 'store_true', help: 'create a new flash card file using the default template' })
+parser.add_argument('-g', '--generate', { action: 'store_true', help: 'create a new flash card file using the default template.yaml' })
 parser.add_argument('flash_card_file', { metavar: 'FLASH_CARD_FILE', help: 'YAML file containing flash card definitions' });
 
 const args = parser.parse_args();
 
 args.output_name = path.parse((args.output_name === '')
    ? args.flash_card_file : args.output_name).name;
-
-args.flash_card_file = args.output_name + '.yaml';
 
 if (args.generate && fs.existsSync(args.flash_card_file))
    utils.terminate(`file '${args.flash_card_file}' already exists`, 1);
