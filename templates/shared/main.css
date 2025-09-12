@@ -15,9 +15,13 @@ body {
    font-size: var(--font-size);
 }
 
-.katex .text {
-   font-family: var(--font-family);
-   font-size: var(--font-size);
+/* .katex .text { */
+/*    font-family: var(--font-family); */
+/*    font-size: var(--font-size); */
+/* } */
+
+.katex-display {
+   margin: 0.6em auto;
 }
 
 .container {
@@ -65,10 +69,13 @@ body {
 }
 
 .card .content {
-   width: 100%;
    vertical-align: center;
    align-items: center;
    justify-content: center;
+}
+
+.front .card .content {
+   width: 100%;
 }
 
 .card .content table {
