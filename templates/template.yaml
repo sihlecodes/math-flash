@@ -1,14 +1,14 @@
 heading: Abstract Algebra
 
 ---
-term: Characterization of <b>cyclic groups generated</b> by an element $a\in G$ in terms of subgroups.
+term: Characterization of *cyclic groups generated* by an element $a\in G$ in terms of subgroups.
 alias: Theorem 3.1
 description: |
-   Let $G$ be a group and $a\in G$. Then the set $$<a>=\{a^k:k\in\Z}$$ is a subgroup of $G$. Futhermore, $<a>$ is the smallest subgroup of $G$ that contains $a$.
+   Let $G$ be a group and $a\in G$. Then the set $$\langle a\rangle=\set{a^k:k\in\Z}$$ is a subgroup of $G$. Futhermore, $\langle a\rangle$ is the smallest subgroup of $G$ that contains $a$.
 page: 53
 
 ---
-term: Conditions for $H\sub G$ to be a <b>subgroup</b> (3-step).
+term: Conditions for $H\sub G$ to be a *subgroup* (3-step).
 alias: Proposition 2.9
 page: 46
 description: |
@@ -17,6 +17,6 @@ listStyle: roman bracket
 list:
   - The identity $e$ of $G$ is in $H$.
   - If $h_1,h_2\in H$, then $h_1h_2\in H$
-  - If $h \in H$, then $h^{-1}\in H$
+  - If $h \in H$, then $h\inv\in H$
 footer:
   Footer text goes here
