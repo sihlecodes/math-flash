@@ -3,7 +3,7 @@ const livereload = require('livereload');
 const connectLivereload = require('connect-livereload');
 const open = require('open');
 
-function launch(port, watchPath, indexFile) {
+function launch(port, watchPath, indexFile, shouldOpenBrowser) {
    const app = express();
 
    const liveReloadServer = livereload.createServer();
@@ -17,7 +17,9 @@ function launch(port, watchPath, indexFile) {
 
    const url = `http://localhost:${port}`;
 
-   open.default(url);
+   if (shouldOpenBrowser)
+      open.default(url);
+
    app.listen(port, () => console.log(`Server running on '${url}'`));
 }
 
