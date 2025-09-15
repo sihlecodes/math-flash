@@ -25,7 +25,7 @@ group.add_argument('-r', '--rows', { default: 4 });
 
 parser.add_argument('-o', '--output-directory', { default: path.join('.', 'output') });
 parser.add_argument('-n', '--output-name', { default: '', help: 'name of the resulting pdf and html files' });
-parser.add_argument('--font-size', { default: '9pt', help: 'specified in css units' });
+parser.add_argument('--font-size', { default: '8pt', help: 'specified in css units' });
 
 const liveGroup = parser.add_argument_group({ title: 'live preview options' });
 liveGroup.add_argument('-v', '--view', { action: 'store_true', help: 'launch a live preview in the browser' });
@@ -33,6 +33,7 @@ liveGroup.add_argument('-p', '--port', { default: 3000 });
 liveGroup.add_argument('--check-interval', { default: 100, help: 'interval for checking flash file changes (in milliseconds)' });
 liveGroup.add_argument('--no-open', { action: 'store_true', help: 'start the preview server without opening the browser.' });
 
+parser.add_argument('-t', '--template', { default: 'view-all.ejs' })
 parser.add_argument('-g', '--generate', { action: 'store_true', help: 'create a new flash card file using the default template.yaml' })
 parser.add_argument('flash_card_file', { metavar: 'FLASH_CARD_FILE', help: 'YAML file containing flash card definitions' });
 

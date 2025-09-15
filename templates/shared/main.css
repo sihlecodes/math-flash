@@ -1,5 +1,6 @@
 :root {
    --border-color: rgba(0, 0, 0, 8%);
+   --border: 1px dashed var(--border-color);
    --font-family: sans-serif;
 }
 
@@ -21,7 +22,8 @@ body {
 /* } */
 
 .katex-display {
-   margin: 0.6em auto;
+   margin-top: 0.6em;
+   margin-bottom: 0.6em;
 }
 
 .container {
@@ -31,7 +33,7 @@ body {
    grid-template-rows: repeat(var(--rows), 1fr);
    width: calc(var(--page-width) - var(--margin-left) - var(--margin-right));
    height: calc(var(--page-height) - var(--margin-top) - var(--margin-bottom));
-   border: 1px dashed var(--border-color);
+   border: var(--border);
    page-break-after: always;
 }
 
@@ -48,19 +50,19 @@ body {
    direction: ltr;
 }
 
-.back .card {
+.card.back {
    --vertical-padding: 0;
 
-   border-right: 1px dashed var(--border-color);
-   border-bottom: 1px dashed var(--border-color);
+   border-right: var(--border);
+   border-bottom: var(--border);
 }
 
 /* Hacks to remove doubled borders */
-.back .card:nth-child(<%- columns _%>n + 1) {
+.card.back:nth-child(<%- columns _%>n + 1) {
    border-right: 0;
 }
 
-.back .card:nth-child(n + <%- (columns * rows) - columns + 1%>) {
+.card.back:nth-child(n + <%- (columns * rows) - columns + 1%>) {
    border-bottom: 0;
 }
 
@@ -74,7 +76,7 @@ body {
    justify-content: center;
 }
 
-.front .card .content {
+.card.front .content {
    width: 100%;
 }
 
@@ -87,7 +89,7 @@ body {
    width: 50%;
 }
 
-.front .card .content {
+.card.front .content {
    display: flex;
    flex-direction: column;
    height: 100%;

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flash Cards</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+    <link rel="stylesheet" href="shared/variables.css">
+    <link rel="stylesheet" href="shared/main.css">
+
+    <script defer src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js"></script>
+    <script defer src="shared/main.js"></script>
+
+<style>
+    .card.back {
+      border-left: var(--border);
+    }
+
+    .card {
+      border-bottom: var(--border);
+    }
+</style>
+
+  </head>
+  <body>
+    <div class="container">
+      <%_ let metadata = pages[pages.length-1]; _%>
+      <%_ let current = metadata[metadata.length-1]; _%>
+      <%- include('cards/front', current) _%>
+      <%- include('cards/back', current) _%>
+    </div>
+  </body>
+</html>

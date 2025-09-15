@@ -5,9 +5,9 @@ const ejs = require('ejs');
 const parser = require('./parser');
 
 const DEFAULT_TEMPLATES_PATH = path.join(__dirname, '..', 'templates');
-const TEMPLATE = path.join(DEFAULT_TEMPLATES_PATH, 'index.ejs');
 
 async function exportToHTML(sourceFlashPath, outputHTMLPath, options) {
+   const template = path.join(DEFAULT_TEMPLATES_PATH, options.template);
    const outputDirectory = path.dirname(outputHTMLPath);
    const sharedDirectory = path.join(outputDirectory, 'shared');
 
@@ -24,7 +24,7 @@ async function exportToHTML(sourceFlashPath, outputHTMLPath, options) {
    const partitionSize = options.columns * options.rows;
    contents = fs.readFileSync(sourceFlashPath, 'utf8');
 
-   parser.parseFlashCardsFile(contents, partitionSize, TEMPLATE)
+   parser.parseFlashCardsFile(contents, partitionSize, template)
       .then((document) => {
          fs.writeFileSync(outputHTMLPath, document);
       }).catch(err => console.log(err));

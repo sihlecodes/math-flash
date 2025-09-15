@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
       '\\Im': '\\thinspace\\text{Im}\\thinspace #1',
       '\\lcm': '\\text{lcm}',
       '\\equivm': '\\thinspace\\equiv{\\thinspace #1}\\pmod #2',
+      '\\bigmod': '\\Bigg|#1\\Bigg|',
     }
   })
 });
