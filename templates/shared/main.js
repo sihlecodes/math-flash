@@ -22,7 +22,9 @@ document.addEventListener('DOMContentLoaded', function() {
       '\\Im': '\\thinspace\\text{Im}\\thinspace #1',
       '\\lcm': '\\text{lcm}',
       '\\equivm': '\\thinspace\\equiv{\\thinspace #1}\\pmod #2',
-      '\\bigmod': '\\Bigg|#1\\Bigg|',
+      '\\bigmod': '\\left|#1\\right|',
+      '\\partiald': '\\frac{\\partial #1}{\\partial #2}',
+      '\\partialdi': '\\partial #1/\\partial #2',
     }
   })
 });
