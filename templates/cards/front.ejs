@@ -1,15 +1,21 @@
 <div class="card front">
   <div class="content">
   <table>
+    <thead>
     <tr><th class="heading" colspan="2"><%- heading _%></th></tr>
+    </thead>
+    <tbody>
     <tr><td class="term" colspan="2"><%- term _%></td></tr>
+    </tbody>
+    <tfoot>
     <tr><td class="page-number">
-      <%_ if (isNaN(page)) { _%>
-      <%- page _%>
-      <%_ } else { _%>
-      <%- "Page " + page _%>
-      <%_ } _%>
-    </td><td class="alias"><%- alias _%></td><tr>
+    <%_ if (Number(page) === parseInt(page)) { _%>
+    <%- "Page " + page _%>
+    <%_ } else { _%>
+    <%- page _%>
+    <%_ } _%>
+    </td><td class="alias"><%- alias _%></td></tr>
+    </tfoot>
   </table>
   </div>
 </div>

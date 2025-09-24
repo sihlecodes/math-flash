@@ -33,8 +33,8 @@ body {
    grid-template-rows: repeat(var(--rows), 1fr);
    width: calc(var(--page-width) - var(--margin-left) - var(--margin-right));
    height: calc(var(--page-height) - var(--margin-top) - var(--margin-bottom));
-   border: var(--border);
    page-break-after: always;
+   table-layout: fixed;
 }
 
 .card {
@@ -50,20 +50,34 @@ body {
    direction: ltr;
 }
 
-.card.back {
-   --vertical-padding: 0;
-
-   border-right: var(--border);
-   border-bottom: var(--border);
+@media screen {
+   .card {
+      border: 1px solid var(--border-color);
+   }
+   .container {
+      border: 1px solid var(--border-color);
+   }
 }
 
-/* Hacks to remove doubled borders */
-.card.back:nth-child(<%- columns _%>n + 1) {
-   border-right: 0;
-}
+@media print {
+   .container.back {
+      border: var(--border);
+   }
+   .card.back {
+      --vertical-padding: 0;
 
-.card.back:nth-child(n + <%- (columns * rows) - columns + 1%>) {
-   border-bottom: 0;
+      border-right: var(--border);
+      border-bottom: var(--border);
+   }
+
+   /* Hacks to remove doubled borders */
+   .card.back:nth-child(<%- columns _%>n + 1) {
+      border-right: 0;
+   }
+
+   .card.back:nth-child(n + <%- (columns * rows) - columns + 1%>) {
+      border-bottom: 0;
+   }
 }
 
 .container.back {
@@ -99,6 +113,10 @@ body {
    background-size: auto 50%;
 }
 
+.card thead, .card tfoot {
+   height: 1.5em;
+}
+
 /* .card .description, .card .footer { */
 /*    text-align: justify; */
 /* } */
@@ -126,6 +144,7 @@ body {
 .card .term {
    text-align: center;
    padding: 0 15%;
+   height: 100%;
 }
 
 ol {
