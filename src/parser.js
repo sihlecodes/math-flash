@@ -86,7 +86,7 @@ function parseFlashCardsFile(flashCardsContent, partitionSize, template) {
    }
 
    let pages = utils.partitionArray(preProcessedData, partitionSize);
-   return ejs.renderFile(template, { pages });
+   return ejs.renderFile(template, { pages, perPage: partitionSize });
 }
 
 module.exports = {
