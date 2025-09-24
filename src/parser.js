@@ -53,7 +53,7 @@ function parseFlashCardField(contents) {
 
 function parseFlashCardsFile(flashCardsContent, partitionSize, template) {
    let data = YAML.loadAll(flashCardsContent);
-   const heading = data.shift();
+   const globals = data.shift();
 
    let preProcessedData = [];
 
@@ -61,8 +61,8 @@ function parseFlashCardsFile(flashCardsContent, partitionSize, template) {
       const defaults = {
          list: [], listStyle: 'roman bracket',
          footer: '', alias: '', page: '',
-         heading: heading.heading ?? '',
-         description: '', term: ''
+         heading: '', description: '',
+         term: '', ...globals
       }
 
       // handles empty fields passed inside yaml
