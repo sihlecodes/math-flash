@@ -15,8 +15,14 @@ document.addEventListener('DOMContentLoaded', function() {
       '\\te': '\\exist',
       '\\fa': '\\forall',
       '\\inv': '^{-1}',
+      '\\tbf': '\\textbf',
+      '\\tit': '\\textit',
+      '\\dom': '\\text{dom}',
 
       // new operators
+      '\\abs': '\\left|#1\\right|',
+      '\\norm': '\\left\\|#1\\right\\|',
+      '\\ang': '\\left\\langle#1\\right\\rangle',
       '\\t': '\\enskip\\text{#1}\\enskip',
       '\\Re': '\\thinspace\\text{Re}\\thinspace',
       '\\Im': '\\thinspace\\text{Im}\\thinspace',
