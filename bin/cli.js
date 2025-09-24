@@ -12,6 +12,9 @@ const server = require('../src/server');
 
 const parser = new argparse.ArgumentParser();
 
+parser.add_argument('-V', '--version', { action: 'version', version: require('../package.json').version });
+parser.description = 'A tool for generating printable math flash cards from a yaml definition file.';
+
 const xorGroup = parser.add_mutually_exclusive_group();
 xorGroup.add_argument('--html-only', { action: 'store_true' });
 xorGroup.add_argument('--pdf-only', { action: 'store_true' });
@@ -80,18 +83,19 @@ if (args.view) {
 
    server.launch(args.port, args.output_directory, outputHTMLName, !args.no_open);
 }
+else {
+   (async function main() {
+      await exportToHTML(args.flash_card_file, outputHTMLName, args);
 
-(async function main() {
-   await exportToHTML(args.flash_card_file, outputHTMLName, args);
+      if (args.html_only)
+         return;
 
-   if (args.html_only)
-      return;
+      await exportToPDF(outputHTMLName, outputPDFName, args)
 
-   await exportToPDF(outputHTMLName, outputPDFName, args)
+      if (!args.pdf_only)
+         return;
 
-   if (!args.pdf_only)
-      return;
-
-   if (fs.existsSync(args.intermediate_output_directory))
-      fs.rmSync(args.intermediate_output_directory, { recursive: true });
-})();
+      if (fs.existsSync(args.intermediate_output_directory))
+         fs.rmSync(args.intermediate_output_directory, { recursive: true });
+   })();
+}
