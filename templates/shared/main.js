@@ -18,10 +18,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // new operators
       '\\t': '\\enskip\\text{#1}\\enskip',
-      '\\Re': '\\thinspace\\text{Re}\\thinspace #1',
-      '\\Im': '\\thinspace\\text{Im}\\thinspace #1',
+      '\\Re': '\\thinspace\\text{Re}\\thinspace',
+      '\\Im': '\\thinspace\\text{Im}\\thinspace',
+      '\\Arg': '\\text{Arg}\\thinspace',
+      '\\Log': '\\text{Log}\\thinspace',
       '\\lcm': '\\text{lcm}',
-      '\\equivm': '\\thinspace\\equiv{\\thinspace #1}\\pmod #2',
+      '\\equivm': '\\thinspace\\equiv{\\thinspace #1}\\pmod {#2}',
       '\\bigmod': '\\left|#1\\right|',
       '\\partiald': '\\frac{\\partial #1}{\\partial #2}',
       '\\partialdi': '\\partial #1/\\partial #2',
