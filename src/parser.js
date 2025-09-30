@@ -3,12 +3,23 @@ const YAML = require('js-yaml');
 
 const utils = require('./utilities');
 
-/**
-  * @param {string} contents
-  * @returns {string}
-  */
+/** Parses a flash card field, converting markdown-like syntax to HTML.
+ * @param {string} contents - The contents of the flash card field to parse.
+ * @returns {string} The parsed contents with HTML formatting.
+ *
+ * Supported syntax:
+ * - Bold text: *bold* -> <b>bold</b>
+ * - Italic text: _italic_ -> <i>italic</i>
+ * - Inline math: $math$ -> ${math}$ (kept together)
+ * - Inline math: $!math$ -> $math$ (not kept together)
+ * - Non-breaking space: \~ -> &nbsp;
+ * - Double line break: \\ -> <br><br>
+ * - En space: \  -> &ensp;
+ *
+ * Note: Text inside math blocks is not further processed for bold/italic.
+ */
 function parseFlashCardField(contents) {
-   if (!contents)
+   if (!contents || typeof contents !== 'string')
       return '';
 
    const pattern = / ?\$\$?(?:[^\$])*?\$\$? ?|[^\$]+?(?= ?\$\$?|$)/g;
@@ -31,7 +42,8 @@ function parseFlashCardField(contents) {
                return `{${m}}`
             })
             .replace(/(?<=\$\$) $/, '')
-            .replace(/(^ | $)/g, '&ensp;');
+            .replace(/(^ | $)/g, '&ensp;')
+            .replace(/<(?=[a-zA-Z])/g, '< ');
          // console.log('after:', segment, '\n');
       }
       else {
@@ -39,7 +51,8 @@ function parseFlashCardField(contents) {
             .replace(/\*([^*]*?)\*/g, '<b>$1</b>')
             .replace(/_([^*]*?)_/g, '<i>$1</i>')
             .replace(/\\ /g, '&ensp;')
-            .replace(/\\~/g, '&nbsp;');
+            .replace(/\\~/g, '&nbsp;')
+            .replace(/\\\\/g, '<br><br>');
       }
 
       segments.push(segment);
@@ -51,6 +64,31 @@ function parseFlashCardField(contents) {
    return segments.join('');
 }
 
+/** Recursively parses flash card fields, handling nested arrays.
+ * @param {string|Array} value - The flash card field value to parse.
+ * @returns {string|Array} The parsed value, maintaining the original structure.
+ */
+function recursiveParseFlashCardField(value) {
+   if (typeof value === 'string')
+      return parseFlashCardField(value);
+
+   if (!Array.isArray(value))
+      return value;
+
+   const parsedList = [];
+
+   for (const nestedValue of value)
+      parsedList.push(recursiveParseFlashCardField(nestedValue));
+
+   return parsedList;
+}
+
+/** Parses a flash cards file content and renders it using a template.
+ * @param {string} flashCardsContent - The content of the flash cards file in YAML format.
+ * @param {number} partitionSize - The number of flash cards per page.
+ * @param {string} template - The path to the EJS template file for rendering.
+ * @returns {Promise<string>} A promise that resolves to the rendered HTML content.
+ */
 function parseFlashCardsFile(flashCardsContent, partitionSize, template) {
    let data = YAML.loadAll(flashCardsContent);
    const globals = data.shift();
@@ -59,30 +97,21 @@ function parseFlashCardsFile(flashCardsContent, partitionSize, template) {
 
    for (const item of data) {
       const defaults = {
-         list: [], listStyle: 'roman bracket',
-         footer: '', alias: '', page: '',
-         heading: '', description: '',
-         term: '', ...globals
+         ...globals
       }
 
-      // handles empty fields passed inside yaml
+      // set defaults
       for (const field in defaults)
-         item[field] ??= defaults[field];
+      item[field] ??= defaults[field];
 
-      for (const field in defaults) {
+      for (const field in item) {
          const value = item[field];
 
-         if (typeof value === 'string')
-            item[field] = parseFlashCardField(value);
+         item[field] = recursiveParseFlashCardField(value);
       }
 
-      const newList = [];
 
-      for (const line of item.list)
-         newList.push(parseFlashCardField(line));
-
-      item.list = newList;
-      preProcessedData.push(item);
+      preProcessedData.push({ props: item });
    }
 
    let pages = utils.partitionArray(preProcessedData, partitionSize);

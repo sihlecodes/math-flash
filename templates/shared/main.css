@@ -11,7 +11,7 @@
 }
 
 body {
-   font-family: sans-serif;
+   font-family: var(--font-family);
    line-height: 1.4;
    font-size: var(--font-size);
 }
@@ -122,8 +122,7 @@ body {
 /* } */
 
 .card .list {
-   margin: 0.6em 0;
-   line-height: 1.65;
+   margin: 0.6em 0em;
 }
 
 .card .heading {
@@ -153,7 +152,25 @@ ol {
 
 ol li {
    padding-left: 0.4em;
+   margin-bottom: 0.5em;
 }
+
+ol li:last-child {
+   margin-bottom: 0;
+}
+
+ol li > ol {
+   padding-left: 1em;
+}
+
+ol ol li:first-child {
+   margin-top: 0.5em;
+}
+
+ol ol:last-child {
+   margin-bottom: 1em;
+}
+
 
 ol.roman {
    list-style: lower-roman;
@@ -167,31 +184,35 @@ ol.alpha {
    list-style: lower-alpha;
 }
 
-ol:is(.bracket, .unnumbered) li {
+ol:is(.alpha, .roman, .decimal) {
+   counter-reset: list-counter;
+}
+
+ol:is(.bracket, .unnumbered, .bullet) > li {
    position: relative;
    counter-increment: list-counter;
    list-style: none;
 }
 
-ol:is(.bracket, .unnumbered) li::before {
+ol:is(.bracket, .unnumbered, .bullet) > li::before {
    position: absolute;
    text-align: right;
    width: 2em;
    left: -2.2em;
 }
 
-ol.unnumbered li::before {
+ol:is(.unnumbered, .bullet) > li::before {
    content: '●';
 }
 
-ol.bracket.roman li::before {
+ol.bracket.roman > li::before {
    content: counter(list-counter, lower-roman) ")";
 }
 
-ol.bracket.decimal li::before {
+ol.bracket.decimal > li::before {
    content: counter(list-counter, decimal) ")";
 }
 
-ol.bracket.alpha li::before {
+ol.bracket.alpha > li::before {
    content: counter(list-counter, lower-alpha) ")";
 }

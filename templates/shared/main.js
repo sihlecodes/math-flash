@@ -17,7 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
       '\\inv': '^{-1}',
       '\\tbf': '\\textbf',
       '\\tit': '\\textit',
-      '\\dom': '\\text{dom}',
+      '\\subg': '\\le',
+      '\\nsubg': '\\trianglelefteq',
 
       // new operators
       '\\abs': '\\left|#1\\right|',
@@ -33,6 +34,10 @@ document.addEventListener('DOMContentLoaded', function() {
       '\\bigmod': '\\left|#1\\right|',
       '\\partiald': '\\frac{\\partial #1}{\\partial #2}',
       '\\partialdi': '\\partial #1/\\partial #2',
+      '\\dom': '\\text{dom}',
+      '\\charc': '\\text{char}',
+      '\\res': '\\text{res}',
+      '\\ord': '\\text{ord}',
     }
   })
 });
