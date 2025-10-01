@@ -38,6 +38,21 @@ document.addEventListener('DOMContentLoaded', function() {
       '\\charc': '\\text{char}',
       '\\res': '\\text{res}',
       '\\ord': '\\text{ord}',
+      '\\d': '\\thinspace d#1'
     }
   })
+
+  const cards = Array.from(document.querySelectorAll('.card'))
+
+  const areCardsSameSize = cards.reduce((acc, c, _, a) =>
+    acc && (a[0].clientWidth === c.clientWidth)
+        && (a[0].clientHeight === c.clientHeight), true);
+
+  if (!areCardsSameSize) {
+    const warning = document.createElement('div')
+    warning.classList.add('warning');
+    warning.innerHTML = '<b>WARNING:</b> Flash cards are not the same size.';
+
+    document.body.appendChild(warning);
+  }
 });

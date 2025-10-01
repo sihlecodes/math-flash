@@ -16,10 +16,25 @@ body {
    font-size: var(--font-size);
 }
 
-/* .katex .text { */
-/*    font-family: var(--font-family); */
-/*    font-size: var(--font-size); */
-/* } */
+.warning {
+   font-size: x-small;
+   position: fixed;
+   top: var(--margin-top);
+   right: var(--margin-right);
+   background-color: #ff4951ef;
+   padding: 8px 12px;
+   border-radius: 0.5em;
+   animation: popup .5s ease-in-out;
+   color: white;
+}
+
+.warning b { color: black; }
+
+@keyframes popup {
+  0% { transform: translateY(1em); opacity: 0; }
+  40% { transform: translateY(0); }
+  100% { opacity: 1; }
+}
 
 .katex-display {
    margin-top: 0.6em;
@@ -75,7 +90,7 @@ body {
       border-right: 0;
    }
 
-   .card.back:nth-child(n + <%- (columns * rows) - columns + 1%>) {
+   .card.back:nth-child(n + <%- (columns * rows) - columns + 1 _%>) {
       border-bottom: 0;
    }
 }
