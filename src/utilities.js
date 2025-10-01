@@ -7,13 +7,13 @@ function isSupportedPageFormat(format) {
    return SUPPORTED_PAGE_FORMATS.includes(format.toLowerCase());
 }
 
-function getPageFormatDimensions(format, isLandscape) {
-   let { width, height, unit } = paperSizes.getPaperSize(format);
+function getPageFormatDimensions(format, isLandscape = false, units = 'mm') {
+   let { width, height } = paperSizes.getPaperSize(format, units);
 
    if (isLandscape)
       [ width, height ] = [ height, width ];
 
-   return { width: `${width}${unit}`, height: `${height}${unit}` };
+   return { width, height };
 }
 
 function sleep(ms) {
