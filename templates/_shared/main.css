@@ -2,6 +2,8 @@
    --border-color: rgba(0, 0, 0, 8%);
    --border: 1px dashed var(--border-color);
    --font-family: sans-serif;
+
+   <%- include(shared('variables')) _%>
 }
 
 * {
