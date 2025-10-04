@@ -91,7 +91,14 @@ function recursiveParseFlashCardField(value) {
  * @returns {Promise<string>} A promise that resolves to the rendered HTML content.
  */
 function parseFlashCardsFile(flashCardsContent, partitionSize, template) {
-   let data = YAML.loadAll(flashCardsContent);
+   let data;
+
+   try {
+      data = YAML.loadAll(flashCardsContent);
+   } catch (e) {
+      return Promise.reject(new Error(e.message));
+   }
+
    const globals = data.shift();
 
    let preProcessedData = [];
