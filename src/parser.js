@@ -1,7 +1,5 @@
-const ejs = require('ejs');
+const fs = require('fs');
 const YAML = require('js-yaml');
-
-const utils = require('./utilities');
 
 /** Parses a flash card field, converting markdown-like syntax to HTML.
  * @param {string} contents - The contents of the flash card field to parse.
@@ -84,13 +82,11 @@ function recursiveParseFlashCardField(value) {
 }
 
 /** Parses a flash cards file content and renders it using a template.
- * @param {string} flashCardsContent - The content of the flash cards file in YAML format.
- * @param {number} partitionSize - The number of flash cards per page.
- * @param {string} template - The path to the EJS template file for rendering.
- * @returns {Promise<string>} A promise that resolves to the rendered HTML content.
+ * @param {string} filename - The filename of the flash cards file.
+ * @returns {Array} Pre-processed flash card file data @see @{@link parseFlashCardField}.
  */
-function parseFlashCardsFile(flashCardsContent, partitionSize, template) {
-   let data = YAML.loadAll(flashCardsContent);
+function parseFlashCardsFile(filename) {
+   let data = YAML.loadAll(fs.readFileSync(filename, 'utf8'));
    const globals = data.shift();
 
    let preProcessedData = [];
@@ -100,22 +96,16 @@ function parseFlashCardsFile(flashCardsContent, partitionSize, template) {
          ...globals
       }
 
-      // set defaults
       for (const field in defaults)
-      item[field] ??= defaults[field];
+         item[field] ??= defaults[field];
 
-      for (const field in item) {
-         const value = item[field];
-
-         item[field] = recursiveParseFlashCardField(value);
-      }
-
+      for (const field in item)
+         item[field] = recursiveParseFlashCardField(item[field]);
 
       preProcessedData.push({ props: item });
    }
 
-   let pages = utils.partitionArray(preProcessedData, partitionSize);
-   return ejs.renderFile(template, { pages, perPage: partitionSize });
+   return { globals, flashCards: preProcessedData };
 }
 
 module.exports = {

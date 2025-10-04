@@ -4,11 +4,25 @@
 
 ~~* Add multilevel list styles~~
 * Add --format flag for pretty formatting html output
+* Add encoding to PNGs nad JPEGs
+* Add support for custom shared templates via `$shared`
+* make viewable templates more composable for cases like `quiz.ejs`
+* swappable background images
+* swappable template dir
 
 ## Documentation updates
 
+* How $shared works
+  - checks user's `_shared` directory first
+  - otherwise uses math-flash's `_shared` directory
+  - for template searching
+* document .ejs files are not exported
+
 * Documentation in README.md
   - Add help of how to set up puppeteer dependencies on linux
+    - libnss3
+    - libnspr4
+    - libasound2-dev
   - add help for new flags -F, -N, -I
   - add version flag to cli usage
   - add documentation for nested being parsed recursively

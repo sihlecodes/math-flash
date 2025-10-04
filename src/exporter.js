@@ -32,26 +32,52 @@ function $dump(filename) {
    return fs.readFileSync(filename, 'utf8');
 }
 
-   if (!fs.existsSync(sharedDirectory))
-      fs.mkdirSync(sharedDirectory, { recursive: true });
+async function exportToHTML(sourceFlashPath, outputDirectory, outputName, cardsPerPage, args) {
+   const templateDirectory = path.join(DEFAULT_TEMPLATES_PATH, args.template);
 
-   const files = fs.globSync(path.join(DEFAULT_TEMPLATES_PATH, 'shared', '*'));
+   if (!fs.existsSync(templateDirectory))
+      throw new Error(`template '${args.template}' does not exist`);
 
-   for (const file of files) {
-      let contents = await ejs.renderFile(file, options);
-      fs.writeFileSync(path.join(sharedDirectory, path.basename(file)), contents);
+   const templatePaths = fs.globSync(path.join(templateDirectory, '**'));
+   const exportableFilePattern = /\.(?!ejs)/;
+   const exportableFiles = templatePaths.filter(p => p.match(exportableFilePattern));
+   const isMultiFile = exportableFiles.length > 1;
+
+   if (isMultiFile) {
+      outputDirectory = path.join(outputDirectory, args.output_name);
+      outputName = 'index';
    }
 
-   const partitionSize = options.columns * options.rows;
-   contents = fs.readFileSync(sourceFlashPath, 'utf8');
+   if (!fs.existsSync(outputDirectory))
+      fs.mkdirSync(outputDirectory, { recursive: true });
 
-   parser.parseFlashCardsFile(contents, partitionSize, template)
-      .then((document) => {
-         fs.writeFileSync(outputHTMLPath, document);
-      }).catch(err => console.log(err));
+   const parsedData = parser.parseFlashCardsFile(sourceFlashPath);
+   const pages = utils.partitionArray(parsedData.flashCards, cardsPerPage);
+   const outputHTMLPath = path.join(outputDirectory, outputName + '.html');
+
+   for (const templatePath of templatePaths) {
+      const suffix = templatePath.replace(templateDirectory, '');
+      const outputPath = path.join(outputDirectory, suffix);
+
+      if (isMultiFile && fs.lstatSync(templatePath).isDirectory())
+         fs.mkdirSync(outputPath, { recursive: true });
+
+      else if (templatePath.match(exportableFilePattern)) {
+         const outputPath = path.join(outputDirectory, suffix);
+
+         await ejs.renderFile(templatePath, {
+               $dump, $encode, $shared, args,
+               data: { pages, globals: parsedData.globals },
+            }).then(content => {
+               fs.writeFileSync(suffix.match('index.html') ? outputHTMLPath : outputPath, content);
+            }).catch(err => console.log(err));
+      }
+   }
+
+   return outputHTMLPath;
 }
 
-async function exportToPDF(sourceHTMLPath, outputPDFPath, options) {
+async function exportToPDF(sourceHTMLPath, outputDirectory, outputName, options) {
    const browser = await puppeteer.launch();
    const page = await browser.newPage();
 
@@ -59,7 +85,7 @@ async function exportToPDF(sourceHTMLPath, outputPDFPath, options) {
       { waitUntil: 'networkidle0', });
 
    await page.pdf({
-      path: outputPDFPath,
+      path: path.join(outputDirectory, outputName + '.pdf'),
       format: options.format,
       margin: options.margins,
       landscape: options.landscape,

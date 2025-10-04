@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title><%= data.globals.heading %> Printable</title>
+  <%- include($shared('base/head')) _%>
+
+  <style>
+    <%- include($shared('base/css')) _%>
+  </style>
+
+  <script defer>
+    <%- include($shared('base/js')) _%>
+  </script>
+
+</head>
+<body>
+  <%_ data.pages.forEach(function(metadata) { _%>
+  <%- include($shared('base/container'), { metadata, type: 'front' }) _%>
+  <%- include($shared('base/container'), { metadata, type: 'back' }) _%>
+  <%_ }); _%>
+</body>
+</html>

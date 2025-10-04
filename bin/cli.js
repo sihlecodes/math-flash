@@ -64,6 +64,7 @@ args.page_size = utils.getPageFormatDimensions(args.format, args.landscape);
 args.margins = utils.parseMargins(args.margins);
 args.output_directory = path.resolve(args.output_directory);
 args.intermediate_output_directory = args.output_directory;
+args.cards_per_page = args.rows * args.columns;
 
 if (fs.existsSync(args.output_directory))
    fs.mkdirSync(args.output_directory, { recursive: true });
@@ -72,30 +73,39 @@ if (args.pdf_only) {
    const prefix = path.join(os.tmpdir(), 'math-flash-');
    const folder = fs.mkdtempSync(prefix);
    args.intermediate_output_directory = folder;
+   args.output_directory = args.intermediate_output_directory;
 }
 
-const outputHTMLName = path.join(args.intermediate_output_directory, args.output_name + '.html');
-const outputPDFName = path.join(args.output_directory, args.output_name + '.pdf');
+(async function main() {
+   function wrapped() {
+      return exportToHTML(
+         args.flash_card_file,
+         args.output_directory,
+         args.output_name,
+         args.cards_per_page, args);
+   }
 
-if (args.view) {
-   utils.watch(args.flash_card_file,
-      () => exportToHTML(args.flash_card_file, outputHTMLName, args), args.check_interval);
+   if (args.view) {
+      const outputHTMLPath = await wrapped();
 
-   server.launch(args.port, args.output_directory, outputHTMLName, !args.no_open);
-}
-else {
-   (async function main() {
-      await exportToHTML(args.flash_card_file, outputHTMLName, args);
+      server.launch(
+         args.port, path.dirname(outputHTMLPath),
+         outputHTMLPath, !args.no_open);
+
+      utils.watch(args.flash_card_file, wrapped, args.check_interval);
+   }
+   else {
+      const outputHTMLPath = await wrapped();
 
       if (args.html_only)
          return;
 
-      await exportToPDF(outputHTMLName, outputPDFName, args)
+      await exportToPDF(outputHTMLPath, args.output_directory, args.output_name, args)
 
       if (!args.pdf_only)
          return;
 
       if (fs.existsSync(args.intermediate_output_directory))
          fs.rmSync(args.intermediate_output_directory, { recursive: true });
-   })();
-}
+   }
+})();

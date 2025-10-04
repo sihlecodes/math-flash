@@ -2,8 +2,7 @@
    --border-color: rgba(0, 0, 0, 8%);
    --border: 1px dashed var(--border-color);
    --font-family: sans-serif;
-
-   <%- include(shared('variables')) _%>
+   <%- include($shared('_variables')) _%>
 }
 
 * {
@@ -17,11 +16,6 @@ body {
    line-height: 1.4;
    font-size: var(--font-size);
 }
-
-/* .katex .text { */
-/*    font-family: var(--font-family); */
-/*    font-size: var(--font-size); */
-/* } */
 
 .katex-display {
    margin-top: 0.6em;
@@ -58,6 +52,7 @@ body {
    }
    .container {
       border: 1px solid var(--border-color);
+      margin: 0 auto;
    }
 }
 
@@ -73,11 +68,11 @@ body {
    }
 
    /* Hacks to remove doubled borders */
-   .card.back:nth-child(<%- columns _%>n + 1) {
+   .card.back:nth-child(<%- args.columns _%>n + 1) {
       border-right: 0;
    }
 
-   .card.back:nth-child(n + <%- (columns * rows) - columns + 1%>) {
+   .card.back:nth-child(n + <%- (args.columns * args.rows) - args.columns + 1%>) {
       border-bottom: 0;
    }
 }
@@ -109,7 +104,7 @@ body {
    display: flex;
    flex-direction: column;
    height: 100%;
-   background-image: url('./delta.svg');
+   background-image: url('<%- $encode($shared("images/delta.svg")) _%>');
    background-repeat: no-repeat;
    background-position: center;
    background-size: auto 50%;
@@ -134,12 +129,10 @@ body {
 
 .card .alias {
    text-align: right;
-   vertical-align: bottom;
 }
 
 .card .page-number {
    text-align: left;
-   vertical-align: bottom;
 }
 
 .card .term {
@@ -186,17 +179,17 @@ ol.alpha {
    list-style: lower-alpha;
 }
 
-ol:is(.alpha, .roman, .decimal) {
+ol:is(.alpha, .roman, .decimal, .bullet) {
    counter-reset: list-counter;
 }
 
-ol:is(.bracket, .unnumbered, .bullet) > li {
+ol:is(.bracket, .bullet) > li {
    position: relative;
    counter-increment: list-counter;
    list-style: none;
 }
 
-ol:is(.bracket, .unnumbered, .bullet) > li::before {
+ol:is(.bracket, .bullet) > li::before {
    position: absolute;
    text-align: right;
    width: 2em;
