@@ -3,13 +3,34 @@ const path = require('path');
 const fs = require('fs');
 const ejs = require('ejs');
 const parser = require('./parser');
+const utils = require('./utilities');
 
 const DEFAULT_TEMPLATES_PATH = path.join(__dirname, '..', 'templates');
 
-async function exportToHTML(sourceFlashPath, outputHTMLPath, options) {
-   const template = path.join(DEFAULT_TEMPLATES_PATH, options.template);
-   const outputDirectory = path.dirname(outputHTMLPath);
-   const sharedDirectory = path.join(outputDirectory, 'shared');
+function $shared(template) {
+   return path.join(DEFAULT_TEMPLATES_PATH, '_shared', template);
+}
+
+function $encode(filename) {
+   const contents = fs.readFileSync(filename, 'utf8');
+
+   const minified = contents
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/[\n\r\t]+/g, '')
+    .replace(/\s{2,}/g, ' ')
+    .replace(/>\s+</g, '><')
+    .replace(/\s*=\s*/g, '=')
+    .trim();
+
+   return 'data:image/svg+xml;utf8,' + encodeURIComponent(minified);
+}
+
+function $dump(filename) {
+   if (!path.extname(filename))
+      filename += '.ejs';
+
+   return fs.readFileSync(filename, 'utf8');
+}
 
    if (!fs.existsSync(sharedDirectory))
       fs.mkdirSync(sharedDirectory, { recursive: true });
