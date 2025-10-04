@@ -18,6 +18,7 @@
   - Unnumbered list style
   - Bigger spaces with '\ ' when outside of math mode
   - Double line breaks with '\\' -> <code><br><br></code> when outside of math mode
+  - & at the beginning of display mode aligns equations at the & symbol
   - Non-breaking spaces when outside of math mode (\~)
   - Templates view-all/last + quiz
   - Add --no-open documentation

@@ -31,9 +31,10 @@ function parseFlashCardField(contents) {
       let segment = match[0];
 
       // text inside math blocks
-      if (segment.includes('$')) { 
+      if (segment.includes('$')) {
          // console.log('before:', segment);
          segment = segment
+            .replace(/(?<=\$\$)&(.+)(?=\$\$)/, '\\begin{align*}$1\\end{align*}')
             .replace(/(?<=^ ?\$)([^\$]{2,})(?=\$)/, m => {
                if (m.startsWith('!'))
                   return m.slice(1);
