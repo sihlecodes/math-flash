@@ -1,0 +1,5 @@
+<div class="container <%- type _%>">
+   <%_ metadata.forEach(function(meta) { _%>
+   <%- include($shared(`base/card/${type}`), meta) _%>
+   <%_ }); _%>
+</div>

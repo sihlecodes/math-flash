@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title><%= data.globals.heading %> Quiz</title>
+  <%- include($shared('base/head')) _%>
+  <style>
+    <%- include('shared/css') _%>
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/ejs@3.1.10/ejs.min.js"></script>
+  <script defer>
+    <%- include('shared/js') _%>
+  </script>
+</head>
+<body>
+    <div id="card-holder" onclick="toggleCard()">
+      <div id="card-front"></div>
+      <div class="hidden" id="card-back"></div>
+    </div>
+    <div class="buttons">
+      <button onclick="backCard()">Back</button>
+      <button onclick="nextCard()">Next</button>
+    </div>
+</body>
+</html>

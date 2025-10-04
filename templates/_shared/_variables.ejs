@@ -1,0 +1,8 @@
+--font-size: <%- args.font_size _%>;
+--page-width: <%- args.page_size.width _%>mm;
+--page-height: <%- args.page_size.height _%>mm;
+--columns: <%= args.columns _%>;
+--rows: <%= args.rows _%>;
+<%_ for (const margin in args.margins) { _%>
+--margin-<%= margin %>: <%= args.margins[margin] _%>;
+<%_ } _%>
