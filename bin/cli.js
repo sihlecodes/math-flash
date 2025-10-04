@@ -73,14 +73,13 @@ if (args.pdf_only) {
    const prefix = path.join(os.tmpdir(), 'math-flash-');
    const folder = fs.mkdtempSync(prefix);
    args.intermediate_output_directory = folder;
-   args.output_directory = args.intermediate_output_directory;
 }
 
 (async function main() {
    function wrapped() {
       return exportToHTML(
          args.flash_card_file,
-         args.output_directory,
+         args.intermediate_output_directory,
          args.output_name,
          args.cards_per_page, args);
    }
