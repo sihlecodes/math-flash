@@ -1,11 +1,23 @@
 <%- include($shared('base/css')) _%>
 
+body {
+   width: 100vw;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   height: 100vh;
+}
+
+#card-holder, .card {
+   border-radius: 6px;
+}
+
 #card-holder {
    width: 400px;
    height: 300px;
-   margin: 50px auto;
    border: var(--border);
-   cursor: default;
+   cursor: pointer;
+   margin-bottom: 20px;
    user-select: none;
 }
 
@@ -33,6 +45,10 @@ button {
    padding: 10px;
    width: 100px;
    margin: 0 5px;
+}
+
+.card tfoot b {
+   float: right;
 }
 
 /* vim:ft=css

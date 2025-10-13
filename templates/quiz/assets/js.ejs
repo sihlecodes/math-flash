@@ -34,26 +34,28 @@ function showCard(cardData) {
   cardFront.innerHTML = ejs.render(frontTemplate, { ...cardData, completion });
   cardBack.innerHTML = ejs.render(backTemplate, cardData);
 
-  // document.querySelector('.card tfoot').appendChild();
-
+  const element = document.createElement('b');
+  element.innerHTML = completion;
   cardFront.className = '';
   cardBack.className = 'hidden';
 
+  document.querySelector('.card tfoot').appendChild(element);
   renderMathInElement(cardHolder, <%- include($shared('katex/options')) _%>);
 }
 
 function nextCard() {
-  if (current)
+  if (current && !previous.includes(current))
     previous.push(current);
 
-  if (next.length === 0) {
+  if (next.length > 0)
+    current = next.pop();
+
+  else if (previous.length < pages.flat().length - 1) {
     current = null
 
-    while (!current || previous.includes(current) && previous.length < pages.flat().length)
+    while (!current || previous.includes(current))
       current = choice(choice(pages));
   }
-  else
-  current = next.pop();
 
   if (current)
     showCard(current);
@@ -69,6 +71,6 @@ function backCard() {
   showCard(current);
 }
 
-document.addEventListener('DOMContentLoaded', () => nextCard());
+document.addEventListener('DOMContentLoaded', nextCard);
 
 // vim:ft=js
