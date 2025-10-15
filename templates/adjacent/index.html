@@ -7,7 +7,7 @@
   <script defer src="assets/main.js"></script>
 </head>
 <body>
-  <%_ data.pages.forEach(function(metadata) { _%>
+  <%_ $partition(data.cards).forEach(function(metadata) { _%>
   <div class="container">
   <%_ for (let i = 0; i < metadata.length; i++) { _%>
   <%- include($shared('base/card/front'), metadata[i]) _%>

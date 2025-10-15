@@ -1,6 +1,6 @@
 <%- include($shared('base/js')) _%>
 
-const pages = <%- JSON.stringify(data.pages) _%>;
+const pages = <%- JSON.stringify(data.cards) _%>;
 
 const frontTemplate = `<%- $dump($shared('base/card/front')) _%>`;
 const backTemplate = `<%- $dump($shared('base/card/back')) _%>`;
@@ -29,7 +29,7 @@ let current = null;
 
 function showCard(cardData) {
   const { cardFront, cardBack, cardHolder } = getElements();
-  const completion = `${previous.length+1}/${pages.flat().length}`;
+  const completion = `${previous.length+1}/${pages.length}`;
 
   cardFront.innerHTML = ejs.render(frontTemplate, { ...cardData, completion });
   cardBack.innerHTML = ejs.render(backTemplate, cardData);
@@ -54,7 +54,7 @@ function nextCard() {
     current = null
 
     while (!current || previous.includes(current))
-      current = choice(choice(pages));
+      current = choice(pages);
   }
 
   if (current)

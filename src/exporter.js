@@ -32,6 +32,12 @@ function $dump(filename) {
    return fs.readFileSync(filename, 'utf8');
 }
 
+function $partition(defaultSize) {
+   return function(array, size = defaultSize) {
+      return utils.partitionArray(array, size);
+   }
+}
+
 async function exportToHTML(sourcePaths, outputDirectory, outputName, cardsPerPage, args) {
    const templateDirectory = path.join(DEFAULT_TEMPLATES_PATH, args.template);
 
@@ -52,11 +58,14 @@ async function exportToHTML(sourcePaths, outputDirectory, outputName, cardsPerPa
       fs.mkdirSync(outputDirectory, { recursive: true });
 
    const parsedData = parser.parseFlashCardsFile(sourcePaths[0]);
+   parsedData.headers = [parsedData.globals];
 
-   for (const sourceFlashPath of sourcePaths.slice(1))
-      parsedData.cards.push(...parser.parseFlashCardsFile(sourceFlashPath).cards);
+   for (const sourceFlashPath of sourcePaths.slice(1)) {
+      const data = parser.parseFlashCardsFile(sourceFlashPath);
+      parsedData.headers.push(data.globals);
+      parsedData.cards.push(...data.cards);
+   }
 
-   const pages = utils.partitionArray(parsedData.cards, cardsPerPage);
    const outputHTMLPath = path.join(outputDirectory, outputName + '.html');
 
    for (const templatePath of templatePaths) {
@@ -71,7 +80,8 @@ async function exportToHTML(sourcePaths, outputDirectory, outputName, cardsPerPa
 
          await ejs.renderFile(templatePath, {
                $dump, $encode, $shared, args,
-               data: { pages, globals: parsedData.globals },
+               $partition: $partition(cardsPerPage),
+               data: parsedData,
             }).then(content => {
                fs.writeFileSync(suffix.match('index.html') ? outputHTMLPath : outputPath, content);
             }).catch(err => console.log(err));

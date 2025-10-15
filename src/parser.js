@@ -90,9 +90,10 @@ function parseFlashCardsFile(filename) {
    } catch (e) {
       return Promise.reject(new Error(e.message));
    }
+
    const globals = data.shift();
 
-   let preProcessedData = [];
+   let preProcessedCards = [];
 
    for (const item of data) {
       const defaults = {
@@ -105,10 +106,10 @@ function parseFlashCardsFile(filename) {
       for (const field in item)
          item[field] = recursiveParseFlashCardField(item[field]);
 
-      preProcessedData.push({ props: item });
+      preProcessedCards.push({ props: item });
    }
 
-   return { globals, cards: preProcessedData };
+   return { globals, cards: preProcessedCards };
 }
 
 module.exports = {

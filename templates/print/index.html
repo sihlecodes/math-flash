@@ -14,7 +14,7 @@
 
 </head>
 <body>
-  <%_ data.pages.forEach(function(metadata) { _%>
+  <%_ $partition(data.cards).forEach(function(metadata) { _%>
   <%- include($shared('base/container'), { metadata, type: 'front' }) _%>
   <%- include($shared('base/container'), { metadata, type: 'back' }) _%>
   <%_ }); _%>
