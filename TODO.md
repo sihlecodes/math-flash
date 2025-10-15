@@ -2,13 +2,19 @@
 
 ## Ideas
 
+~~* Add multiple file watch support~~
 ~~* Add multilevel list styles~~
 * Add --format flag for pretty formatting html output
-* Add encoding to PNGs nad JPEGs
-* Add support for custom shared templates via `$shared`
-* make viewable templates more composable for cases like `quiz.ejs`
 * swappable background images
+  - Add encoding to PNGs nad JPEGs
+* Add support for custom shared templates via `$shared`
 * swappable template dir
+~~* make viewable templates more composable for cases like `quiz.ejs`~~
+
+## Nice to haves
+
+* make collating more performant
+  - add directory watching instead of single file watching
 
 ## Documentation updates
 
