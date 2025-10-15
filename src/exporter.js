@@ -32,7 +32,7 @@ function $dump(filename) {
    return fs.readFileSync(filename, 'utf8');
 }
 
-async function exportToHTML(sourceFlashPath, outputDirectory, outputName, cardsPerPage, args) {
+async function exportToHTML(sourcePaths, outputDirectory, outputName, cardsPerPage, args) {
    const templateDirectory = path.join(DEFAULT_TEMPLATES_PATH, args.template);
 
    if (!fs.existsSync(templateDirectory))
@@ -51,8 +51,12 @@ async function exportToHTML(sourceFlashPath, outputDirectory, outputName, cardsP
    if (!fs.existsSync(outputDirectory))
       fs.mkdirSync(outputDirectory, { recursive: true });
 
-   const parsedData = parser.parseFlashCardsFile(sourceFlashPath);
-   const pages = utils.partitionArray(parsedData.flashCards, cardsPerPage);
+   const parsedData = parser.parseFlashCardsFile(sourcePaths[0]);
+
+   for (const sourceFlashPath of sourcePaths.slice(1))
+      parsedData.cards.push(...parser.parseFlashCardsFile(sourceFlashPath).cards);
+
+   const pages = utils.partitionArray(parsedData.cards, cardsPerPage);
    const outputHTMLPath = path.join(outputDirectory, outputName + '.html');
 
    for (const templatePath of templatePaths) {

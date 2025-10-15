@@ -38,24 +38,36 @@ liveGroup.add_argument('-N', '--no-open', { action: 'store_true', help: 'start t
 
 parser.add_argument('-t', '--template', { default: 'print' })
 parser.add_argument('-g', '--generate', { action: 'store_true', help: 'create a new flash card file using the default template.yaml' })
-parser.add_argument('flash_card_file', { metavar: 'FLASH_CARD_FILE', help: 'YAML file containing flash card definitions' });
+parser.add_argument('flash_card_files', { nargs: '+', metavar: 'FLASH_CARD_FILE', help: 'YAML file containing flash card definitions' });
 
 const args = parser.parse_args();
 
-args.output_name = path.parse((args.output_name === '')
-   ? args.flash_card_file : args.output_name).name;
+if (args.output_name === '')
+   args.output_name = (args.flash_card_files.length > 1) ?
+      'combined' : args.flash_card_files[0];
 
-if (args.generate && fs.existsSync(args.flash_card_file))
-   utils.terminate(`file '${args.flash_card_file}' already exists`, 1);
+args.output_name = path.parse(args.output_name).name;
 
 if (args.generate) {
    const template = path.join(DEFAULT_TEMPLATES_PATH, 'template.yaml');
-   fs.writeFileSync(args.flash_card_file, fs.readFileSync(template, 'utf8'));
+
+   for (const file of args.flash_card_files) {
+      if (fs.existsSync(file)) {
+         console.error(`flash card file '${file}' already exists`);
+         continue;
+      }
+
+      fs.mkdirSync(path.dirname(file), { recursive: true });
+      fs.writeFileSync(file, fs.readFileSync(template, 'utf8'));
+   }
+
    process.exit(0);
 }
 
-if (!fs.existsSync(args.flash_card_file))
-   utils.terminate(`file not found '${args.flash_card_file}'`, 1);
+for (const file of args.flash_card_files) {
+   if (!fs.existsSync(file))
+      utils.terminate(`flash card file '${file}' does not exist`, 1);
+}
 
 if (!utils.isSupportedPageFormat(args.format))
    utils.terminate(`unknown export format '${args.format}'`, 1);
@@ -78,7 +90,7 @@ if (args.pdf_only) {
 (async function main() {
    function wrapped() {
       return exportToHTML(
-         args.flash_card_file,
+         args.flash_card_files,
          args.intermediate_output_directory,
          args.output_name,
          args.cards_per_page, args);
@@ -91,7 +103,7 @@ if (args.pdf_only) {
          args.port, path.dirname(outputHTMLPath),
          outputHTMLPath, !args.no_open);
 
-      utils.watch(args.flash_card_file, wrapped, args.check_interval);
+      utils.watch(args.flash_card_files, wrapped, args.check_interval);
    }
    else {
       const outputHTMLPath = await wrapped();

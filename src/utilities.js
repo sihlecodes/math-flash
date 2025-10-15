@@ -21,34 +21,34 @@ function sleep(ms) {
 }
 
 function terminate(reason, code) {
-   console.error(reason);
+   console.error('Error:', reason);
    process.exit(code);
 }
 
-async function watch(file, callback, interval) {
+async function watch(files, callback, interval) {
    const options = {
       persistent: true,
       interval
    };
 
-   await callback();
+   for (const file of files) {
+      const watcher = fs.watchFile(file, options, async(current, previous) => {
+         if (current.mtime !== previous.mtime) {
+            try {
+               fs.accessSync(file, fs.constants.F_OK);
 
-   const watcher = fs.watchFile(file, options, async(current, previous) => {
-      if (current.mtime !== previous.mtime) {
-         try {
-            fs.accessSync(file, fs.constants.F_OK);
+               console.log('Flash card file updated at:', current.mtime);
+               await callback();
 
-            console.log('Flash card file updated at:', current.mtime);
-            await callback();
-
-         } catch (err) {
-            console.error(`Flash card file '${file}' is inaccessible.`);
+            } catch (err) {
+               console.error(`Flash card file '${file}' is inaccessible.`);
+            }
          }
-      }
-   });
+      });
 
-   watcher.on('error', err =>
-      console.error('An error occurred with the file watcher:', err));
+      watcher.on('error', err =>
+         console.error('An error occurred with the file watcher:', err));
+   }
 }
 
 function partitionArray(array, size) {

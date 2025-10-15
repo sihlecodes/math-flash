@@ -10,6 +10,7 @@ const YAML = require('js-yaml');
  * - Italic text: _italic_ -> <i>italic</i>
  * - Inline math: $math$ -> ${math}$ (kept together)
  * - Inline math: $!math$ -> $math$ (not kept together)
+ * - Align equations in display mode: $$&math$$ -> $$\begin{align*}math\end{align*}$$
  * - Non-breaking space: \~ -> &nbsp;
  * - Double line break: \\ -> <br><br>
  * - En space: \  -> &ensp;
@@ -30,7 +31,6 @@ function parseFlashCardField(contents) {
 
       // text inside math blocks
       if (segment.includes('$')) {
-         // console.log('before:', segment);
          segment = segment
             .replace(/(?<=\$\$)&(.+)(?=\$\$)/, '\\begin{align*}$1\\end{align*}')
             .replace(/(?<=^ ?\$)([^\$]{2,})(?=\$)/, m => {
@@ -43,22 +43,18 @@ function parseFlashCardField(contents) {
             .replace(/(?<=\$\$) $/, '')
             .replace(/(^ | $)/g, '&ensp;')
             .replace(/<(?=[a-zA-Z])/g, '< ');
-         // console.log('after:', segment, '\n');
       }
       else {
          segment = segment
             .replace(/\*([^*]*?)\*/g, '<b>$1</b>')
             .replace(/_([^*]*?)_/g, '<i>$1</i>')
+            .replace(/\\\\/g, '<br><br>')
             .replace(/\\ /g, '&ensp;')
-            .replace(/\\~/g, '&nbsp;')
-            .replace(/\\\\/g, '<br><br>');
+            .replace(/\\~/g, '&nbsp;');
       }
 
       segments.push(segment);
    }
-
-   // console.log('before:', `'${contents}'`);
-   // console.log('after:', `'${segments.join('')}'\n`);
 
    return segments.join('');
 }
@@ -112,7 +108,7 @@ function parseFlashCardsFile(filename) {
       preProcessedData.push({ props: item });
    }
 
-   return { globals, flashCards: preProcessedData };
+   return { globals, cards: preProcessedData };
 }
 
 module.exports = {
