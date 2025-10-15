@@ -51,5 +51,44 @@ button {
    float: right;
 }
 
+
+input {
+   font-size: inherit;
+}
+
+.col, .row {
+   display: flex;
+   flex-wrap: wrap;
+   align-items: center;
+   gap: 0.5rem;
+}
+
+.col {
+   flex-direction: column;
+}
+
+.chapter-checkbox {
+   width: fit-content;
+   gap: 0;
+}
+
+.root {
+   display: flex;
+   align-items: center;
+   gap: 1rem;
+}
+
+@media (min-aspect-ratio: 3/4) {
+   .root {
+      flex-direction: column;
+   }
+}
+
+@media (min-aspect-ratio: 4/3) {
+   .root {
+      flex-direction: row;
+   }
+}
+
 /* vim:ft=css
  */

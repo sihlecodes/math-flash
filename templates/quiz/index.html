@@ -8,19 +8,47 @@
   </style>
 
   <script src="https://cdn.jsdelivr.net/npm/ejs@3.1.10/ejs.min.js"></script>
+  <% const chapters = data.headers.map(h => Number(h.chapter)).filter(c => !isNaN(c)) %>
+  <% const uniqueChapters = [ ...new Set(chapters) ] %>
+
   <script defer>
+    const chapters = <%- JSON.stringify(Object.fromEntries(uniqueChapters.map(c => [c, true]))) %>;
+
     <%- include('assets/js') _%>
   </script>
 </head>
 <body>
-    <div class="_container">
-      <div id="card-holder" onclick="toggleCard()">
-        <div id="card-front"></div>
-        <div class="hidden" id="card-back"></div>
+    <div class="root">
+
+      <div class="col">
+        <div class="col">
+          <p>Chapters</p>
+          <div class="row">
+            <% uniqueChapters.forEach(chapter => { %>
+              <div class="chapter-checkbox col">
+                <input type="checkbox" id="chapter-<%= chapter %>" checked onchange="toggleChapterFilter(<%= chapter %>)">
+                <label for="chapter-<%= chapter %>"><%= chapter %></label>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+
+        <input type="text" id="search-input" placeholder="Regex search..." oninput="resetCards(document.getElementById('shuffle-checkbox').checked)">
+
+        <div class="row">
+          <label for="shuffle-checkbox">Shuffle Cards</label>
+          <input type="checkbox" id="shuffle-checkbox" onchange="resetCards(this.checked)">
+        </div>
       </div>
-      <div class="buttons">
-        <button onclick="backCard()">Back</button>
-        <button onclick="nextCard()">Next</button>
+      <div class="card-container">
+        <div id="card-holder" onclick="flipCard()">
+          <div id="card-front"></div>
+          <div class="hidden" id="card-back"></div>
+        </div>
+        <div class="buttons">
+          <button onclick="backCard()">Back</button>
+          <button onclick="nextCard()">Next</button>
+        </div>
       </div>
     </div>
 </body>

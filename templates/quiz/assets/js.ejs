@@ -1,6 +1,6 @@
 <%- include($shared('base/js')) _%>
 
-const pages = <%- JSON.stringify(data.cards) _%>;
+const CARDS = <%- JSON.stringify(data.cards) _%>;
 
 const frontTemplate = `<%- $dump($shared('base/card/front')) _%>`;
 const backTemplate = `<%- $dump($shared('base/card/back')) _%>`;
@@ -13,64 +13,120 @@ function getElements() {
   return { cardFront, cardBack, cardHolder };
 }
 
-function choice(array) {
-  return array[Math.floor(Math.random() * array.length)];
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+
+  return array;
 }
 
-function toggleCard() {
+function getFilteredBySearch(cards, query) {
+  const regex = new RegExp(query, 'i');
+
+  return cards.filter(p => {
+    let found = false;
+
+    Object.keys(p.props).forEach(key => {
+      found ||= regex.test(p.props[key]);
+    });
+
+    return found;
+  });
+}
+
+function getFilteredByChapters(cards, chapters) {
+  return cards.filter(c => chapters[Number(c.props.chapter)]);
+}
+
+function getFiltered() {
+  const query = document.getElementById('search-input').value.trim();
+  let filtered = getFilteredBySearch(CARDS, query);
+
+  return getFilteredByChapters(filtered, chapters);
+}
+
+function toggleChapterFilter(chapter) {
+  chapters[chapter] = !chapters[chapter];
+  resetCards(document.getElementById('shuffle-checkbox').checked);
+}
+
+let previous;
+let next;
+let current;
+
+function resetCards(isShuffled = false, cards = getFiltered()) {
+  previous = [];
+  current = null;
+  next = cards.toReversed();
+
+  if (next.length === 0)
+    showCard();
+
+  if (isShuffled)
+    next = shuffle(next);
+
+  nextCard();
+}
+
+function flipCard() {
   const { cardFront, cardBack } = getElements();
   cardFront.classList.toggle('hidden');
   cardBack.classList.toggle('hidden');
 }
 
-let previous = [];
-let next = [];
-let current = null;
+function renderTemplates(data) {
+  const { cardFront, cardBack } = getElements();
+  cardFront.innerHTML = ejs.render(frontTemplate, data);
+  cardBack.innerHTML = ejs.render(backTemplate, data);
+}
 
 function showCard(cardData) {
   const { cardFront, cardBack, cardHolder } = getElements();
-  const completion = `${previous.length+1}/${pages.length}`;
 
-  cardFront.innerHTML = ejs.render(frontTemplate, { ...cardData, completion });
-  cardBack.innerHTML = ejs.render(backTemplate, cardData);
+  if (cardData !== undefined) {
+    renderTemplates(cardData);
 
-  const element = document.createElement('b');
-  element.innerHTML = completion;
-  cardFront.className = '';
-  cardBack.className = 'hidden';
+    const progress = `${previous.length+1}/${previous.length + next.length + 1}`;
+    const element = document.createElement('b');
+    element.innerHTML = progress;
+    cardFront.className = '';
+    cardBack.className = 'hidden';
+    document.querySelector('.card tfoot').appendChild(element);
+  }
+  else {
+    renderTemplates({ props: {
+      heading: 'No Cards',
+      term: 'No cards match the current filters.',
+      description: 'Try changing the search query or chapter filters.',
+    }});
+  }
 
-  document.querySelector('.card tfoot').appendChild(element);
   renderMathInElement(cardHolder, <%- include($shared('katex/options')) _%>);
 }
 
 function nextCard() {
-  if (current && !previous.includes(current))
-    previous.push(current);
-
-  if (next.length > 0)
-    current = next.pop();
-
-  else if (previous.length < pages.flat().length - 1) {
-    current = null
-
-    while (!current || previous.includes(current))
-      current = choice(pages);
-  }
+  if (next.length === 0)
+    return;
 
   if (current)
-    showCard(current);
+    previous.push(current);
+
+  current = next.pop();
+  showCard(current);
 }
 
 function backCard() {
   if (previous.length === 0)
     return;
 
-  next.push(current);
-  current = previous.pop();
+  if (current)
+    next.push(current);
 
+  current = previous.pop();
   showCard(current);
 }
 
-document.addEventListener('DOMContentLoaded', nextCard);
-
+document.addEventListener('DOMContentLoaded', () => resetCards());
 // vim:ft=js
