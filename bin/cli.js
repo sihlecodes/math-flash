@@ -22,7 +22,7 @@ xorGroup.add_argument('-P', '--pdf-only', { action: 'store_true' });
 const group = parser.add_argument_group({ title: 'export options' });
 group.add_argument('-f', '--format', { default: 'A4', help: 'pdf output format; defaults to A4. (note: ignored if --html-only is used along with this option.)' });
 group.add_argument('-l', '--landscape', { action: 'store_true' });
-group.add_argument('-m', '--margins', { default: '5mm', help: 'specify margins in a similar fashion to css margins but dimensions should be comma separated. (i.e. 10px,5mm corresponds to 10px top & bottom margins, 5mm left & right margins). Alternatively you can specify all 4 margins, comma separated of course :D.' });
+group.add_argument('-m', '--margins', { default: '7mm', help: 'specify margins in a similar fashion to css margins but dimensions should be comma separated. (i.e. 10px,5mm corresponds to 10px top & bottom margins, 5mm left & right margins). Alternatively you can specify all 4 margins, comma separated of course :D.' });
 group.add_argument('-c', '--columns', { default: 2 });
 group.add_argument('-r', '--rows', { default: 4 });
 
