@@ -1,0 +1,55 @@
+<%- include($shared('base/css')) _%>
+
+body {
+   width: 100vw;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   height: 100vh;
+}
+
+#card-holder, .card {
+   border-radius: 6px;
+}
+
+#card-holder {
+   width: 400px;
+   height: 300px;
+   border: var(--border);
+   cursor: pointer;
+   margin-bottom: 20px;
+   user-select: none;
+}
+
+#card-back, #card-front {
+   width: 100%;
+   height: 100%;
+}
+
+.front .content {
+   width: 100%;
+   height: 100%;
+}
+
+.hidden {
+   display: none;
+}
+
+.buttons {
+   text-align: center;
+   margin: 0 auto;
+   width: 100%;
+}
+
+button {
+   padding: 10px;
+   width: 100px;
+   margin: 0 5px;
+}
+
+.card tfoot b {
+   float: right;
+}
+
+/* vim:ft=css
+ */

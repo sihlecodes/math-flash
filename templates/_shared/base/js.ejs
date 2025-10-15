@@ -1,0 +1,29 @@
+document.addEventListener('DOMContentLoaded', function() {
+  renderMathInElement(document.body, <%- include($shared('katex/options')) _%>);
+
+  const cards = Array.from(document.querySelectorAll('.card'))
+
+  let areCardsSameSize = true;
+
+  for (const card of cards) {
+    const content = card.querySelectorAll('.content')[0];
+
+    if (card.clientWidth !== cards[0].clientWidth)
+      card.classList.add('mismatch', 'width');
+
+    if (card.clientHeight !== cards[0].clientHeight || card.clientHeight < content.clientHeight)
+      card.classList.add('mismatch', 'height');
+
+    areCardsSameSize &= !card.classList.contains('mismatch');
+  }
+
+  if (!areCardsSameSize) {
+    const warning = document.createElement('div')
+    warning.classList.add('warning');
+    warning.innerHTML = '<b>WARNING:</b> Flash cards are not the same size.';
+
+    document.body.appendChild(warning);
+  }
+});
+
+// vim:ft=js

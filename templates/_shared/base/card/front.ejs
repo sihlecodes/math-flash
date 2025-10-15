@@ -1,0 +1,21 @@
+<div class="card front">
+  <div class="content">
+  <table>
+    <thead>
+    <tr><th class="heading" colspan="2"><%- props.heading _%></th></tr>
+    </thead>
+    <tbody>
+    <tr><td class="term" colspan="2"><%- props.term _%></td></tr>
+    </tbody>
+    <tfoot>
+    <tr><td class="page-number">
+    <%_ if (Number(props.page) === parseInt(props.page)) { _%>
+    <%- "Page " + props.page _%>
+    <%_ } else { _%>
+    <%- props.page _%>
+    <%_ } _%>
+    </td><td class="alias"><%- props.alias _%></td></tr>
+    </tfoot>
+  </table>
+  </div>
+</div>

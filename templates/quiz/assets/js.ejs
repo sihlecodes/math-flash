@@ -1,0 +1,76 @@
+<%- include($shared('base/js')) _%>
+
+const pages = <%- JSON.stringify(data.pages) _%>;
+
+const frontTemplate = `<%- $dump($shared('base/card/front')) _%>`;
+const backTemplate = `<%- $dump($shared('base/card/back')) _%>`;
+
+function getElements() {
+  const cardHolder = document.getElementById('card-holder');
+  const cardFront = document.getElementById('card-front');
+  const cardBack = document.getElementById('card-back');
+
+  return { cardFront, cardBack, cardHolder };
+}
+
+function choice(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
+function toggleCard() {
+  const { cardFront, cardBack } = getElements();
+  cardFront.classList.toggle('hidden');
+  cardBack.classList.toggle('hidden');
+}
+
+let previous = [];
+let next = [];
+let current = null;
+
+function showCard(cardData) {
+  const { cardFront, cardBack, cardHolder } = getElements();
+  const completion = `${previous.length+1}/${pages.flat().length}`;
+
+  cardFront.innerHTML = ejs.render(frontTemplate, { ...cardData, completion });
+  cardBack.innerHTML = ejs.render(backTemplate, cardData);
+
+  const element = document.createElement('b');
+  element.innerHTML = completion;
+  cardFront.className = '';
+  cardBack.className = 'hidden';
+
+  document.querySelector('.card tfoot').appendChild(element);
+  renderMathInElement(cardHolder, <%- include($shared('katex/options')) _%>);
+}
+
+function nextCard() {
+  if (current && !previous.includes(current))
+    previous.push(current);
+
+  if (next.length > 0)
+    current = next.pop();
+
+  else if (previous.length < pages.flat().length - 1) {
+    current = null
+
+    while (!current || previous.includes(current))
+      current = choice(choice(pages));
+  }
+
+  if (current)
+    showCard(current);
+}
+
+function backCard() {
+  if (previous.length === 0)
+    return;
+
+  next.push(current);
+  current = previous.pop();
+
+  showCard(current);
+}
+
+document.addEventListener('DOMContentLoaded', nextCard);
+
+// vim:ft=js

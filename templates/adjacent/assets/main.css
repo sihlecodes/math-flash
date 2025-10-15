@@ -1,0 +1,11 @@
+<%- include($shared('base/css')) _%>
+
+@media screen {
+   .container {
+      height: auto;
+   }
+
+   .card {
+      height: calc((var(--page-height) - var(--margin-top) - var(--margin-bottom))/4);
+   }
+}

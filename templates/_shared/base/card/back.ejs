@@ -1,0 +1,32 @@
+<%_ props.listStyles = props.listStyles || [props.listStyle ?? 'roman bracket']; _%>
+
+<%_ function renderRecursiveList(value, depth=0) { _%>
+  <%_ if (typeof value === 'string') { _%><li><%- value %>
+  <%_ } else if (Array.isArray(value)) { _%>
+    <ol class="list <%= props.listStyles[depth] ?? props.listStyles[props.listStyles.length-1] %>">
+      <%_ for (let i = 0; i < value.length; i++) { _%>
+        <%- renderRecursiveList(value[i], depth + 1) %>
+        <%_ if (!Array.isArray(value[i + 1])) { _%></li><%_ } _%>
+      <%_ } _%>
+    </ol>
+  <%_ } _%>
+<%_ } _%>
+
+<div class="card back">
+   <div class="content">
+      <%_ if (props.description) { _%>
+      <div class="description">
+         <%- props.description _%>
+      </div>
+      <%_ } _%>
+      <%_ if (props.list && props.list.length > 0) { _%>
+         <%- renderRecursiveList(props.list) _%>
+      <%_ } _%>
+
+      <%_ if (props.footer) { _%>
+      <div class="footer">
+         <%- props.footer _%>
+      </div>
+      <%_ } _%>
+   </div>
+</div>

@@ -1,0 +1,264 @@
+:root {
+   --warning-color: #ff4951ef;
+   --border-color: rgba(0, 0, 0, 8%);
+   --border: 1px dashed var(--border-color);
+   --font-family: sans-serif;
+   <%- include($shared('_variables')) _%>
+}
+
+* {
+   margin: 0;
+   box-sizing: border-box;
+   border-collapse: collapse;
+}
+
+body {
+   font-family: var(--font-family);
+   line-height: 1.4;
+   font-size: var(--font-size);
+}
+
+.warning {
+   position: fixed;
+   right: var(--margin);
+   top: var(--margin);
+   animation: popup .5s ease-in-out;
+}
+
+.warning, .mismatch::after {
+   --margin: 8px;
+   font-size: x-small;
+   background-color: var(--warning-color);
+   padding: 8px 12px;
+   border-radius: 0.5em;
+   z-index: 1000;
+   color: white;
+}
+
+.warning b { color: black; }
+
+.mismatch {
+   position: relative;
+}
+
+.mismatch::after {
+   position: absolute;
+   bottom: var(--margin);
+   right: var(--margin);
+}
+
+.mismatch.width::after {
+   content: 'WIDTH';
+}
+
+.mismatch.height::after {
+   content: 'HEIGHT';
+}
+
+.mismatch.width.height::after {
+   content: 'WIDTH & HEIGHT';
+}
+
+@keyframes popup {
+  0% { transform: translateY(1em); opacity: 0; }
+  40% { transform: translateY(0); }
+  100% { opacity: 1; }
+}
+
+.container {
+   display: grid;
+   gap: 0;
+   grid-template-columns: repeat(var(--columns), 1fr);
+   grid-template-rows: repeat(var(--rows), 1fr);
+   width: calc(var(--page-width) - var(--margin-left) - var(--margin-right));
+   height: calc(var(--page-height) - var(--margin-top) - var(--margin-bottom));
+   page-break-after: always;
+   table-layout: fixed;
+}
+
+.card {
+   --vertical-padding: 20px;
+   --horizontal-padding: 30px;
+
+   display: flex;
+   width: 100%;
+   height: 100%;
+   padding: var(--vertical-padding) var(--horizontal-padding);
+   align-items: center;
+   justify-content: center;
+   direction: ltr;
+}
+
+@media screen {
+   .warning {
+      right: var(--margin-right);
+      top: var(--margin-top);
+   }
+
+   .card {
+      border: 1px solid var(--border-color);
+   }
+   .container {
+      border: 1px solid var(--border-color);
+      margin: 0 auto;
+   }
+}
+
+@media print {
+   .container.back {
+      border: var(--border);
+   }
+   .card.back {
+      --vertical-padding: 0;
+
+      border-right: var(--border);
+      border-bottom: var(--border);
+   }
+
+   /* Hacks to remove doubled borders */
+   .card.back:nth-child(<%- args.columns _%>n + 1) {
+      border-right: 0;
+   }
+
+   .card.back:nth-child(n + <%- (args.columns * args.rows) - args.columns + 1%>) {
+      border-bottom: 0;
+   }
+}
+
+.container.back {
+   direction: rtl;
+}
+
+.card .content {
+   vertical-align: center;
+   align-items: center;
+   justify-content: center;
+}
+
+.card.front .content {
+   width: 100%;
+}
+
+.card .content table {
+   width: 100%;
+   height: 100%;
+}
+
+.card .content table td {
+   width: 50%;
+}
+
+.card.front .content {
+   display: flex;
+   flex-direction: column;
+   height: 100%;
+   background-image: url('<%- $encode($shared("images/delta.svg")) _%>');
+   background-repeat: no-repeat;
+   background-position: center;
+   background-size: auto 50%;
+}
+
+.card thead, .card tfoot {
+   height: 1.5em;
+}
+
+/* .card .description, .card .footer { */
+/*    text-align: justify; */
+/* } */
+
+.card .list {
+   margin: 0.6em 0em;
+}
+
+.card .heading {
+   text-align: center;
+   vertical-align: top;
+}
+
+.card .alias {
+   text-align: right;
+}
+
+.card .page-number {
+   text-align: left;
+}
+
+.card .term {
+   text-align: center;
+   padding: 0 15%;
+   height: 100%;
+}
+
+ol {
+   padding-left: 2.1em;
+}
+
+ol li {
+   padding-left: 0.4em;
+   margin-bottom: 0.5em;
+}
+
+ol li:last-child {
+   margin-bottom: 0;
+}
+
+ol li > ol {
+   padding-left: 1em;
+}
+
+ol ol li:first-child {
+   margin-top: 0.5em;
+}
+
+ol ol:last-child {
+   margin-bottom: 1em;
+}
+
+
+ol.roman {
+   list-style: lower-roman;
+}
+
+ol.decimal {
+   list-style: decimal;
+}
+
+ol.alpha {
+   list-style: lower-alpha;
+}
+
+ol:is(.alpha, .roman, .decimal, .bullet) {
+   counter-reset: list-counter;
+}
+
+ol:is(.bracket, .bullet) > li {
+   position: relative;
+   counter-increment: list-counter;
+   list-style: none;
+}
+
+ol:is(.bracket, .bullet) > li::before {
+   position: absolute;
+   text-align: right;
+   width: 2em;
+   left: -2.2em;
+}
+
+ol:is(.unnumbered, .bullet) > li::before {
+   content: '●';
+}
+
+ol.bracket.roman > li::before {
+   content: counter(list-counter, lower-roman) ")";
+}
+
+ol.bracket.decimal > li::before {
+   content: counter(list-counter, decimal) ")";
+}
+
+ol.bracket.alpha > li::before {
+   content: counter(list-counter, lower-alpha) ")";
+}
+
+/* vim:ft=css
+ */
