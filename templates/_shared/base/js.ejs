@@ -3,9 +3,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const cards = Array.from(document.querySelectorAll('.card'))
 
-  const areCardsSameSize = cards.reduce((acc, c, _, a) =>
-    acc && (a[0].clientWidth === c.clientWidth)
-        && (a[0].clientHeight === c.clientHeight), true);
+  let areCardsSameSize = true;
+
+  for (const card of cards) {
+    const content = card.querySelectorAll('.content')[0];
+
+    if (card.clientWidth !== cards[0].clientWidth)
+      card.classList.add('mismatch', 'width');
+
+    if (card.clientHeight !== cards[0].clientHeight || card.clientHeight < content.clientHeight)
+      card.classList.add('mismatch', 'height');
+
+    areCardsSameSize &= !card.classList.contains('mismatch');
+  }
 
   if (!areCardsSameSize) {
     const warning = document.createElement('div')

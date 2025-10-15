@@ -1,4 +1,5 @@
 :root {
+   --warning-color: #ff4951ef;
    --border-color: rgba(0, 0, 0, 8%);
    --border: 1px dashed var(--border-color);
    --font-family: sans-serif;
@@ -18,18 +19,45 @@ body {
 }
 
 .warning {
-   font-size: x-small;
    position: fixed;
-   top: var(--margin-top);
-   right: var(--margin-right);
-   background-color: #ff4951ef;
+   right: var(--margin);
+   top: var(--margin);
+   animation: popup .5s ease-in-out;
+}
+
+.warning, .mismatch::after {
+   --margin: 8px;
+   font-size: x-small;
+   background-color: var(--warning-color);
    padding: 8px 12px;
    border-radius: 0.5em;
-   animation: popup .5s ease-in-out;
+   z-index: 1000;
    color: white;
 }
 
 .warning b { color: black; }
+
+.mismatch {
+   position: relative;
+}
+
+.mismatch::after {
+   position: absolute;
+   bottom: var(--margin);
+   right: var(--margin);
+}
+
+.mismatch.width::after {
+   content: 'WIDTH';
+}
+
+.mismatch.height::after {
+   content: 'HEIGHT';
+}
+
+.mismatch.width.height::after {
+   content: 'WIDTH & HEIGHT';
+}
 
 @keyframes popup {
   0% { transform: translateY(1em); opacity: 0; }
@@ -62,6 +90,11 @@ body {
 }
 
 @media screen {
+   .warning {
+      right: var(--margin-right);
+      top: var(--margin-top);
+   }
+
    .card {
       border: 1px solid var(--border-color);
    }
