@@ -3,6 +3,9 @@
   <table>
     <thead>
     <tr><th class="heading" colspan="2"><%- props.heading _%></th></tr>
+    <%_ if (Number(props.chapter) === parseInt(props.chapter)) { _%>
+    <tr><td class="chapter" colspan="2">Chapter <%- props.chapter _%></td></tr>
+    <%_ } _%>
     </thead>
     <tbody>
     <tr><td class="term" colspan="2"><%- props.term _%></td></tr>
@@ -14,7 +17,13 @@
     <%_ } else { _%>
     <%- props.page _%>
     <%_ } _%>
-    </td><td class="alias"><%- props.alias _%></td></tr>
+    </td><td class="alias">
+    <%_ if (props.alias) { _%>
+    <%- props.alias _%>
+    <%_ } else { _%>
+    Chapter <%- props.chapter _%>
+    <%_ } _%>
+    </td></tr>
     </tfoot>
   </table>
   </div>

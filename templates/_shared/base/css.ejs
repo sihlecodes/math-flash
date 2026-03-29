@@ -111,13 +111,13 @@ body {
    .card.back {
       --vertical-padding: 0;
 
-      border-right: var(--border);
+      border-left: var(--border);
       border-bottom: var(--border);
    }
 
    /* Hacks to remove doubled borders */
-   .card.back:nth-child(<%- args.columns _%>n + 1) {
-      border-right: 0;
+   .card.back:nth-child(<%- args.columns _%>n) {
+      border-left: 0;
    }
 
    .card.back:nth-child(n + <%- (args.columns * args.rows) - args.columns + 1%>) {
@@ -158,8 +158,15 @@ body {
    background-size: auto 50%;
 }
 
-.card thead, .card tfoot {
+.card thead :is(th, td), .card tfoot td {
    height: 1.5em;
+}
+
+.card .chapter {
+   text-align: center;
+   font-size: 0.9em;
+   height: 2em;
+   color: gray;
 }
 
 /* .card .description, .card .footer { */

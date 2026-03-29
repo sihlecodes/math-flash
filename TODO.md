@@ -1,7 +1,14 @@
 # Things To Do
 
+## Bugs
+
+* Catch live preview errors and display them
+  - currently crashes the whole program
+* Fix filtering when there are no chapters specified
+
 ## Ideas
 
+* Append template name to output filename
 ~~* Add multiple file watch support~~
 ~~* Add multilevel list styles~~
 * Add --format flag for pretty formatting html output

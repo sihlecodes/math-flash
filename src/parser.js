@@ -88,7 +88,7 @@ function parseFlashCardsFile(filename) {
    try {
       data = YAML.loadAll(fs.readFileSync(filename, 'utf8'));
    } catch (e) {
-      return Promise.reject(new Error(e.message));
+      throw new Error(e.message);
    }
 
    const globals = data.shift();

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title><%= data.globals.heading %> Debug</title>
+  <%- include($shared('base/head')) _%>
+  <link rel="stylesheet" href="assets/main.css">
+  <script defer src="assets/main.js"></script>
+</head>
+<body>
+  <%_ data.pages.forEach(function(metadata) { _%>
+  <div class="container">
+  <%_ for (let i = 0; i < metadata.length; i++) { _%>
+  <!-- <%- include($shared('base/card/front'), metadata[i]) _%> -->
+  <%- include($shared('base/card/back'), metadata[i]) _%>
+  <%_ } _%>
+  </div>
+  <%_ }); _%>
+</body>
+</html>

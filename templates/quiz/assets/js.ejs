@@ -44,7 +44,7 @@ function getFiltered() {
   const query = document.getElementById('search-input').value.trim();
   let filtered = getFilteredBySearch(CARDS, query);
 
-  return getFilteredByChapters(filtered, chapters);
+  return filtered;//getFilteredByChapters(filtered, chapters);
 }
 
 function toggleChapterFilter(chapter) {
